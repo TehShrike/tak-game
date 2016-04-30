@@ -2,7 +2,8 @@ const validPiece = require('./valid-piece')
 const getSquare = require('./get-square')
 
 const validityChecks = {
-	PLACE: placeIsValid
+	PLACE: placeIsValid,
+	MOVE: moveIsValid
 }
 
 module.exports = function moveIsValid(boardState, move) {
@@ -14,9 +15,16 @@ module.exports = function moveIsValid(boardState, move) {
 }
 
 function placeIsValid(boardState, move) {
-	return notAStandingCapstone(move)
+	const correctPlayersTurn = move.piece.toLowerCase() === boardState.whoseTurn
+
+	return correctPlayersTurn
+		&& notAStandingCapstone(move)
 		&& validPiece(move.piece)
 		&& getSquare(boardState, move).pieces.length === 0
+}
+
+function moveIsValid(boardState, move) {
+	return true
 }
 
 function notAStandingCapstone(move) {

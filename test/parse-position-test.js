@@ -15,7 +15,7 @@ test('import 3x3 board', t => {
 		xxo^|x   |
 		    |ooxO|x
 		xo  |    |ox
-	`)
+	`, o)
 
 	const expected = {
 		size: 3,
@@ -33,7 +33,8 @@ test('import 3x3 board', t => {
 				pieces: 10 - 5,
 				capstones: -1
 			}
-		}
+		},
+		whoseTurn: 'o'
 	}
 
 	t.deepEqual(actual, expected)
@@ -63,7 +64,8 @@ test('import 4x4 board', t => {
 				pieces: 10 - 5,
 				capstones: 0
 			}
-		}
+		},
+		whoseTurn: 'x'
 	}
 
 	t.deepEqual(actual, expected)

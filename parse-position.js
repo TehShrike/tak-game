@@ -18,7 +18,7 @@ function defaultStartingPiecesByBoardSize(boardSize) {
 	}
 }
 
-module.exports = function parsePosition(positionString) {
+module.exports = function parsePosition(positionString, whoseTurn = 'x') {
 	const rows = positionString.trim().split('\n')
 	const size = rows.length
 	const { pieces: startingPieces, capstones: startingCapstones } = defaultStartingPiecesByBoardSize(size)
@@ -47,6 +47,7 @@ module.exports = function parsePosition(positionString) {
 
 	return {
 		size,
+		whoseTurn,
 		y: rowStructure,
 		piecesInHand: {
 			x: {
