@@ -2,6 +2,7 @@ const makeReducer = require('create-redux-reducer-from-map')
 const immutableUpdate = require('immutability-helper')
 const getSquare = require('./get-square')
 const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
+const reduceMove = require('./iterate-over-move-squares').reduce
 
 module.exports = makeReducer({
     PLACE: applyPlace,
@@ -30,43 +31,22 @@ function applyPlace(boardState, move) {
 	}))
 }
 
-function applyMove(boardState, move) {
-	const startingSquare = getSquare(boardState, move)
-	const toPickUp = getPiecesPickedUpFromSquare(boardState, move)
+function applyMove(initialBoardState, move) {
+	const startingSquare = getSquare(initialBoardState, move)
+	const toPickUp = getPiecesPickedUpFromSquare(initialBoardState, move)
 
-	// mutability warning: only ok because the array contains primitives
-	const stackToMove = startingSquare.pieces.slice(-toPickUp)
-
-	const newBoardState = pickUp(boardState, move, toPickUp)
-
-	function adjust(current, offset) {
-		return current + (move.direction === '+' ? offset : (-offset))
-	}
-
-	function getNextSquareCoordinates(offset) {
-		const coordinates = {
-			x: move.x,
-			y: move.y
-		}
-		coordinates[move.axis] = adjust(coordinates[move.axis], offset)
-		return coordinates
-	}
-
-	return toggleWhoseTurn(move.drops.reduce((boardState, numberOfPiecesToDrop, offset) => {
-		const currentSquareCoordinates = getNextSquareCoordinates(offset)
-		const piecesBeingDropped = stackToMove.splice(0, numberOfPiecesToDrop)
-		const lastDrop = offset === move.drops.length - 1
-
-		return getSquare.modify(boardState, currentSquareCoordinates, {
+	const stateAfterSpreadingOutNewPieces = toggleWhoseTurn(reduceMove(initialBoardState, move, (boardState, { coordinates, last, piecesBeingDropped }) => {
+		return getSquare.modify(boardState, coordinates, {
 			pieces: {
 				$push: piecesBeingDropped
 			},
 			topIsStanding: {
-				$set: lastDrop && startingSquare.topIsStanding
+				$set: last && startingSquare.topIsStanding
 			}
 		})
+	}))
 
-	}, newBoardState))
+	return pickUp(stateAfterSpreadingOutNewPieces, move, toPickUp)
 }
 
 function isCapstone(piece) {
