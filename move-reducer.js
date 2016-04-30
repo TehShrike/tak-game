@@ -1,6 +1,7 @@
 const makeReducer = require('create-redux-reducer-from-map')
 const immutableUpdate = require('immutability-helper')
 const getSquare = require('./get-square')
+const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
 
 module.exports = makeReducer({
     PLACE: applyPlace,
@@ -31,7 +32,7 @@ function applyPlace(boardState, move) {
 
 function applyMove(boardState, move) {
 	const startingSquare = getSquare(boardState, move)
-	const toPickUp = Math.min(boardState.size, startingSquare.pieces.length)
+	const toPickUp = getPiecesPickedUpFromSquare(boardState, move)
 
 	// mutability warning: only ok because the array contains primitives
 	const stackToMove = startingSquare.pieces.slice(-toPickUp)

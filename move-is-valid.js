@@ -1,5 +1,7 @@
 const validPiece = require('./valid-piece')
 const getSquare = require('./get-square')
+const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
+const assertTypes = require('./assert-types')
 
 const validityChecks = {
 	PLACE: placeIsValid,
@@ -15,6 +17,8 @@ module.exports = function moveIsValid(boardState, move) {
 }
 
 function placeIsValid(boardState, move) {
+	assertTypes.place(move)
+
 	const correctPlayersTurn = move.piece.toLowerCase() === boardState.whoseTurn
 
 	return correctPlayersTurn
@@ -23,10 +27,25 @@ function placeIsValid(boardState, move) {
 		&& getSquare(boardState, move).pieces.length === 0
 }
 
-function moveIsValid(boardState, move) {
-	return true
-}
-
 function notAStandingCapstone(move) {
 	return !(/[XO]/.test(move.piece) && move.standing)
 }
+
+
+function moveIsValid(boardState, move) {
+	assertTypes.move(move)
+
+	return dropsAreLegal(boardState, move)
+		&& dropsAddUpToPickedUp(boardState, move)
+}
+
+function dropsAreLegal(boardState, move) {
+	return move.drops.length > 1
+		&& move.drops.slice(1).every(dropped => dropped > 0)
+}
+
+function dropsAddUpToPickedUp(boardState, move) {
+	const pickedUpCount = getPiecesPickedUpFromSquare(boardState, move)
+	return move.drops.reduce((total, drop) => total + drop) === pickedUpCount
+}
+

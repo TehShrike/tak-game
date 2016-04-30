@@ -66,13 +66,15 @@ test('placing new stones', t => {
 
 test('only x and o are allowed piece types', t => {
 	const empty = { y: 2, x: 1 }
-	t.notOk(moveIsValid(fewRandomPieces, {
-		type: 'PLACE',
-		x: empty.x,
-		y: empty.y,
-		piece: 'y',
-		standing: false
-	}))
+	t.throws(() => {
+		moveIsValid(fewRandomPieces, {
+			type: 'PLACE',
+			x: empty.x,
+			y: empty.y,
+			piece: 'y',
+			standing: false
+		})
+	})
 
 	t.end()
 })
@@ -87,51 +89,82 @@ test('invalid types are invalid', t => {
 	t.end()
 })
 
-// test('Invalid movements', t => {
-// 	function startingStacks(whoseTurn) {
-// 		return p(`
-// 			xxooxx|oo|X  |
-// 			oox   |O |ooo|o
-// 			xxoo  |o^|x^ |xxo^
-// 			ox    |x |oo |oooo
-// 		`, whoseTurn)
-// 	}
+test('Invalid movements', t => {
+	function startingStacks(whoseTurn) {
+		return p(`
+			xxooxx|oo|X  |
+			oox   |O |ooo|o
+			xxoo  |o^|x^ |xxo^
+			ox    |x |oo |oooo
+		`, whoseTurn)
+	}
 
-// 	const xTurn = startingStacks('x')
-// 	const oTurn = startingStacks('o')
+	const xTurn = startingStacks('x')
+	const oTurn = startingStacks('o')
 
-// 	t.notOk(moveIsValid(oTurn, {
-// 		type: 'MOVE',
-// 		y: 3,
-// 		x: 0,
-// 		axis: 'x',
-// 		direction: '+',
-// 		drops: [0, 1, 2]
-// 	}), 'the first in the drop list can be 0')
+	t.ok(moveIsValid(xTurn, {
+		type: 'MOVE',
+		y: 3,
+		x: 0,
+		axis: 'x',
+		direction: '+',
+		drops: [0, 1, 3]
+	}), 'the first in the drop list can be 0')
 
-// 	t.notOk(moveIsValid(oTurn, {
-// 		type: 'MOVE',
-// 		y: 3,
-// 		x: 0,
-// 		axis: 'x',
-// 		direction: '+',
-// 		drops: [1, 0, 2]
-// 	}), 'only the first in the drop list can be 0')
+	t.notOk(moveIsValid(oTurn, {
+		type: 'MOVE',
+		y: 3,
+		x: 0,
+		axis: 'x',
+		direction: '+',
+		drops: [1, 0, 2]
+	}), 'the second in the drop list can not be 0')
 
-// 	// testMove(, {
-// 	// 	type: 'MOVE',
-// 	// 	x:
-// 	// })
+	t.notOk(moveIsValid(xTurn, {
+		type: 'MOVE',
+		y: 3,
+		x: 0,
+		axis: 'y',
+		direction: '-',
+		drops: [1, 2, 2]
+	}), `Can't move more stones than you can pick up`)
 
-// 	t.end()
-// })
+	t.notOk(moveIsValid(xTurn, {
+		type: 'MOVE',
+		y: 3,
+		x: 0,
+		axis: 'y',
+		direction: '-',
+		drops: [0, 2]
+	}), `Can't move less stones than you can pick up`)
+
+	t.notOk(moveIsValid(xTurn, {
+		type: 'MOVE',
+		y: 3,
+		x: 3,
+		axis: 'y',
+		direction: '-',
+		drops: [0, 0]
+	}), `Can't move from an empty space`)
+
+	t.notOk(moveIsValid(xTurn, {
+		type: 'MOVE',
+		y: 1,
+		x: 3,
+		axis: 'y',
+		direction: '+',
+		drops: [0, 2]
+	}), `Can't move less stones than you can pick up`)
 
 
-// TOASSERT: can't move from an empty square
+
+	t.end()
+})
+
+
 // TOASSERT: can't move from a square that you don't own
 // TOASSERT: no standing blocks or capstones in the path
 // TOASSERT: no moving stacks off the edge of the board
-// TOASSERT: moving exactly as many stones as could be picked up
 // TOASSERT: only axis x and y are valid
 // TOASSERT: only direction - and + are valid
 // TOASSERT: must drop on >1 square
