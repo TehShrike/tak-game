@@ -35,7 +35,11 @@ function notAStandingCapstone(move) {
 function moveIsValid(boardState, move) {
 	assertTypes.move(move)
 
-	return correctDropAmounts(boardState, move)
+	const startingSquare = getSquare(boardState, move)
+
+
+	return squareIsOwnedBy(startingSquare, boardState.whoseTurn)
+		&& correctDropAmounts(boardState, move)
 		&& dropsAddUpToPickedUp(boardState, move)
 		&& allDropsStayOnTheBoard(boardState, move)
 }
@@ -57,3 +61,7 @@ function dropsAddUpToPickedUp(boardState, move) {
 	return move.drops.reduce((total, drop) => total + drop) === pickedUpCount
 }
 
+function squareIsOwnedBy(square, owner) {
+	return square.pieces.length > 0
+		&& square.pieces[square.pieces.length - 1].toLowerCase() === owner
+}

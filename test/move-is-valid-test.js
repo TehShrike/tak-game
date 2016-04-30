@@ -102,13 +102,14 @@ test('Invalid movements', t => {
 	const xTurn = startingStacks('x')
 	const oTurn = startingStacks('o')
 
-	function moveIsValidExceptFor(board, move, key, value, message) {
-		t.ok(moveIsValid(board, move), `Valid portion: ${message}`)
+	function moveIsValidExceptFor(move, key, value, message) {
+		t.ok(moveIsValid(move.board, move), `Valid portion: ${message}`)
 		move[key] = value
-		t.notOk(moveIsValid(board, move), message)
+		t.notOk(moveIsValid(move.board, move), message)
 	}
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: xTurn,
 		type: 'MOVE',
 		y: 3,
 		x: 0,
@@ -117,7 +118,8 @@ test('Invalid movements', t => {
 		drops: [0, 1, 3]
 	}, 'drops', [1, 0, 2], 'Only the first in the drop list can be 0')
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: xTurn,
 		type: 'MOVE',
 		y: 3,
 		x: 0,
@@ -126,7 +128,8 @@ test('Invalid movements', t => {
 		drops: [2, 2]
 	}, 'drops', [1, 2, 2], `Can't move more stones than you can pick up`)
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: xTurn,
 		type: 'MOVE',
 		y: 3,
 		x: 0,
@@ -135,7 +138,8 @@ test('Invalid movements', t => {
 		drops: [2, 2]
 	}, 'drops', [0, 2], `Can't move less stones than you can pick up`)
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: xTurn,
 		type: 'MOVE',
 		y: 3,
 		x: 2,
@@ -144,16 +148,18 @@ test('Invalid movements', t => {
 		drops: [0, 1]
 	}, 'x', 3, `Can't move from an empty space`)
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: oTurn,
 		type: 'MOVE',
 		y: 1,
 		x: 3,
 		axis: 'y',
 		direction: '+',
 		drops: [0, 3]
-	}, 'drops', [0, 2], `Can't move less stones than you can pick up`)
+	}, 'drops', [0, 2], `Can't move less stones than you can pick up, even with a standing stone`)
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: oTurn,
 		type: 'MOVE',
 		y: 1,
 		x: 3,
@@ -162,7 +168,8 @@ test('Invalid movements', t => {
 		drops: [0, 3]
 	}, 'drops', [3], `Must move onto at least one other square`)
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: oTurn,
 		type: 'MOVE',
 		y: 1,
 		x: 3,
@@ -171,7 +178,8 @@ test('Invalid movements', t => {
 		drops: [0, 1, 2]
 	}, 'drops', [0, 1, 1, 1], `Can't move off the board up`)
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: oTurn,
 		type: 'MOVE',
 		y: 1,
 		x: 3,
@@ -180,7 +188,8 @@ test('Invalid movements', t => {
 		drops: [0, 3]
 	}, 'drops', [0, 1, 2], `Can't move off the board down`)
 
-	moveIsValidExceptFor(xTurn, {
+	moveIsValidExceptFor({
+		board: oTurn,
 		type: 'MOVE',
 		y: 0,
 		x: 2,
@@ -188,6 +197,46 @@ test('Invalid movements', t => {
 		direction: '+',
 		drops: [0, 2]
 	}, 'drops', [0, 1, 1], `Can't move off the board right`)
+
+	moveIsValidExceptFor({
+		board: oTurn,
+		type: 'MOVE',
+		y: 0,
+		x: 2,
+		axis: 'x',
+		direction: '+',
+		drops: [1, 1]
+	}, 'board', xTurn, `Can't move an o-owned stack when it's x's turn`)
+
+	moveIsValidExceptFor({
+		board: xTurn,
+		type: 'MOVE',
+		y: 0,
+		x: 0,
+		axis: 'y',
+		direction: '+',
+		drops: [1, 1]
+	}, 'board', oTurn, `Can't move an x-owned stack when it's o's turn`)
+
+	moveIsValidExceptFor({
+		board: xTurn,
+		type: 'MOVE',
+		y: 3,
+		x: 2,
+		axis: 'y',
+		direction: '-',
+		drops: [0, 1]
+	}, 'board', oTurn, `Can't move an x-capped stack when it's o's turn`)
+
+	moveIsValidExceptFor({
+		board: oTurn,
+		type: 'MOVE',
+		y: 2,
+		x: 1,
+		axis: 'y',
+		direction: '+',
+		drops: [0, 1]
+	}, 'board', xTurn, `Can't move an o-capped stack when it's x's turn`)
 
 	t.end()
 })
