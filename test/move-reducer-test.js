@@ -16,7 +16,8 @@ test('place a new piece', t => {
 		type: 'PLACE',
 		x: 1,
 		y: 2,
-		piece: 'x'
+		piece: 'x',
+		standing: false
 	}
 	t.ok(moveIsValid(fewRandomPieces('x'), move))
 	const actual = apply(fewRandomPieces('x'), move)
@@ -57,7 +58,8 @@ test('place a new capstone', t => {
 		type: 'PLACE',
 		x: 1,
 		y: 2,
-		piece: 'X'
+		piece: 'X',
+		standing: false
 	}
 	t.ok(moveIsValid(fewRandomPieces('x'), move))
 	const actual = apply(fewRandomPieces('x'), move)

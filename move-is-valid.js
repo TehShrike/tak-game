@@ -35,13 +35,21 @@ function notAStandingCapstone(move) {
 function moveIsValid(boardState, move) {
 	assertTypes.move(move)
 
-	return dropsAreLegal(boardState, move)
+	return correctDropAmounts(boardState, move)
 		&& dropsAddUpToPickedUp(boardState, move)
+		&& allDropsStayOnTheBoard(boardState, move)
 }
 
-function dropsAreLegal(boardState, move) {
+function correctDropAmounts(boardState, move) {
 	return move.drops.length > 1
 		&& move.drops.slice(1).every(dropped => dropped > 0)
+}
+
+function allDropsStayOnTheBoard(boardState, move) {
+	const startingCoordinate = move[move.axis]
+	const moveSpaces = move.drops.length - 1
+	const endingCoordinate = startingCoordinate + (move.direction === '+' ? moveSpaces : (-moveSpaces))
+	return endingCoordinate >= 0 && endingCoordinate < boardState.size
 }
 
 function dropsAddUpToPickedUp(boardState, move) {
