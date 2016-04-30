@@ -1,6 +1,9 @@
 const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
 const getSquare = require('./get-square')
 
+// non-obvious caveat: you can't call these functions after picking
+// up the stack from the original spot
+
 function moveDetails(startingBoardState, move) {
 	const startingSquare = getSquare(startingBoardState, move)
 	const toPickUp = getPiecesPickedUpFromSquare(startingBoardState, move)

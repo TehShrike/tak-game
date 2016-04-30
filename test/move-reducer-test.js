@@ -61,14 +61,19 @@ test('place a new capstone', t => {
 		piece: 'X',
 		standing: false
 	}
-	t.ok(moveIsValid(fewRandomPieces('x'), move))
-	const actual = apply(fewRandomPieces('x'), move)
+	const boardState = fewRandomPieces('x')
+	boardState.piecesInHand.x.capstones = 1
+
+	t.ok(moveIsValid(boardState, move))
+	const actual = apply(boardState, move)
 
 	const expected = p(`
 		x|X |
 		 |  |O
 		 |o^|
 	`, 'o')
+
+	expected.piecesInHand.x.capstones = 0
 
 	t.deepEqual(actual, expected)
 	t.end()

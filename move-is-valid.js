@@ -2,6 +2,8 @@ const validPiece = require('./valid-piece')
 const getSquare = require('./get-square')
 const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
 const assertTypes = require('./assert-types')
+const moveMap = require('./iterate-over-move-squares').map
+const isCapstone = require('./is-capstone')
 
 const validityChecks = {
 	PLACE: placeIsValid,
@@ -22,9 +24,16 @@ function placeIsValid(boardState, move) {
 	const correctPlayersTurn = move.piece.toLowerCase() === boardState.whoseTurn
 
 	return correctPlayersTurn
+		&& hasPiecesLeft(boardState, move)
 		&& notAStandingCapstone(move)
 		&& validPiece(move.piece)
 		&& getSquare(boardState, move).pieces.length === 0
+}
+
+function hasPiecesLeft(boardState, move) {
+	const pieceCountKey = isCapstone(move.piece) ? 'capstones' : 'pieces'
+	const piecesLeft = boardState.piecesInHand[move.piece.toLowerCase()][pieceCountKey]
+	return piecesLeft > 0
 }
 
 function notAStandingCapstone(move) {
@@ -37,11 +46,11 @@ function moveIsValid(boardState, move) {
 
 	const startingSquare = getSquare(boardState, move)
 
-
 	return squareIsOwnedBy(startingSquare, boardState.whoseTurn)
 		&& correctDropAmounts(boardState, move)
 		&& dropsAddUpToPickedUp(boardState, move)
 		&& allDropsStayOnTheBoard(boardState, move)
+		&& doesNotHitABlockingPiece(boardState, move)
 }
 
 function correctDropAmounts(boardState, move) {
@@ -64,4 +73,29 @@ function dropsAddUpToPickedUp(boardState, move) {
 function squareIsOwnedBy(square, owner) {
 	return square.pieces.length > 0
 		&& square.pieces[square.pieces.length - 1].toLowerCase() === owner
+}
+
+function doesNotHitABlockingPiece(boardState, move) {
+	return moveMap(boardState, move, ({ coordinates, first, piecesBeingDropped }) => {
+		if (first) {
+			return {
+				capstone: false,
+				standing: false
+			}
+		} else {
+			const square = getSquare(boardState, coordinates)
+			const droppingOnlyACapstone = piecesBeingDropped.length === 1 && isCapstone(piecesBeingDropped[0])
+			return {
+				capstone: topPieceIsCapstone(square),
+				topIsStanding: square.topIsStanding,
+				droppingOnlyACapstone
+			}
+		}
+	}).every(pieceDeetz => (!pieceDeetz.capstone && !pieceDeetz.topIsStanding) || (pieceDeetz.topIsStanding && pieceDeetz.droppingOnlyACapstone))
+}
+
+function topPieceIsCapstone(square) {
+	const pieces = square.pieces
+	return pieces.length > 0
+		&& isCapstone(pieces[pieces.length - 1])
 }

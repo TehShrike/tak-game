@@ -3,6 +3,7 @@ const immutableUpdate = require('immutability-helper')
 const getSquare = require('./get-square')
 const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
 const reduceMove = require('./iterate-over-move-squares').reduce
+const isCapstone = require('./is-capstone')
 
 module.exports = makeReducer({
     PLACE: applyPlace,
@@ -49,9 +50,6 @@ function applyMove(initialBoardState, move) {
 	return pickUp(stateAfterSpreadingOutNewPieces, move, toPickUp)
 }
 
-function isCapstone(piece) {
-	return piece.toUpperCase() === piece
-}
 
 function pickUp(boardState, coordinates, toPickUp) {
 	return getSquare.modify(boardState, coordinates, {

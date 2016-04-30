@@ -3,11 +3,18 @@ const test = require('tape')
 const p = require('../parse-position')
 
 function fewRandomPieces(whoseTurn) {
-	return p(`
+	const boardState = p(`
 		x|    |
 		 |oX  |O
 		 |oxo^|
 	`, whoseTurn)
+
+	boardState.piecesInHand.x.capstones = 1
+	boardState.piecesInHand.x.pieces = 1
+	boardState.piecesInHand.o.capstones = 1
+	boardState.piecesInHand.o.pieces = 1
+
+	return boardState
 }
 
 test('placing new stones', t => {
@@ -64,6 +71,57 @@ test('placing new stones', t => {
 	t.end()
 })
 
+test(`can't place when all your pieces are used up`, t => {
+	const allPiecesUsedUp = p(`
+		xxxxx|xxxxx|xxxxx
+		ooooo|ooooo|ooooo
+		     |     |
+	`, 'x')
+
+	allPiecesUsedUp.piecesInHand.x.pieces = 0
+	allPiecesUsedUp.piecesInHand.x.capstones = 0
+	allPiecesUsedUp.piecesInHand.o.pieces = 0
+	allPiecesUsedUp.piecesInHand.o.capstones = 0
+
+	allPiecesUsedUp.whoseTurn = 'o'
+
+	t.notOk(moveIsValid(allPiecesUsedUp, {
+		type: 'PLACE',
+		x: 0,
+		y: 0,
+		piece: 'o',
+		standing: false
+	}), `Can't place an o stone after they're all used up`)
+
+	t.notOk(moveIsValid(allPiecesUsedUp, {
+		type: 'PLACE',
+		x: 0,
+		y: 0,
+		piece: 'O',
+		standing: false
+	}), `Can't place an o capstone after they're all used up`)
+
+	allPiecesUsedUp.whoseTurn = 'x'
+
+	t.notOk(moveIsValid(allPiecesUsedUp, {
+		type: 'PLACE',
+		x: 0,
+		y: 0,
+		piece: 'x',
+		standing: false
+	}), `Can't place an x stone after they're all used up`)
+
+	t.notOk(moveIsValid(allPiecesUsedUp, {
+		type: 'PLACE',
+		x: 0,
+		y: 0,
+		piece: 'X',
+		standing: false
+	}), `Can't place an x capstone after they're all used up`)
+
+	t.end()
+})
+
 test('only x and o are allowed piece types', t => {
 	const empty = { y: 2, x: 1 }
 	t.throws(() => {
@@ -93,7 +151,7 @@ test('Invalid movements', t => {
 	function startingStacks(whoseTurn) {
 		return p(`
 			xxooxx|oo|X  |
-			oox   |O |ooo|o
+			oox   |oO|ooo|o
 			xxoo  |o^|x^ |xxo^
 			ox    |x |oo |oooo
 		`, whoseTurn)
@@ -113,8 +171,8 @@ test('Invalid movements', t => {
 		type: 'MOVE',
 		y: 3,
 		x: 0,
-		axis: 'x',
-		direction: '+',
+		axis: 'y',
+		direction: '-',
 		drops: [0, 1, 3]
 	}, 'drops', [1, 0, 2], 'Only the first in the drop list can be 0')
 
@@ -235,12 +293,39 @@ test('Invalid movements', t => {
 		x: 1,
 		axis: 'y',
 		direction: '+',
-		drops: [0, 1]
+		drops: [0, 2]
 	}, 'board', xTurn, `Can't move an o-capped stack when it's x's turn`)
+
+	moveIsValidExceptFor({
+		board: oTurn,
+		type: 'MOVE',
+		y: 0,
+		x: 2,
+		axis: 'x',
+		direction: '+',
+		drops: [0, 2]
+	}, 'axis', 'y', `Can't move onto a standing stone`)
+
+	moveIsValidExceptFor({
+		board: xTurn,
+		type: 'MOVE',
+		y: 2,
+		x: 0,
+		axis: 'y',
+		direction: '+',
+		drops: [1, 2]
+	}, 'axis', 'x', `Can't move onto a capstone`)
+
+	moveIsValidExceptFor({
+		board: oTurn,
+		type: 'MOVE',
+		y: 2,
+		x: 1,
+		axis: 'y',
+		direction: '-',
+		drops: [1, 1]
+	}, 'drops', [0, 2], `Can't flatten a standing stone with anything but a single capstone`)
+
 
 	t.end()
 })
-
-// TOASSERT: you can only move a stack that you own
-// TOASSERT: no standing blocks or capstones in the path
-// TOASSERT: capstone can only move onto a standing stone if it is the only piece being dropped there
