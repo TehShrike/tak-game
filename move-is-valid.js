@@ -3,7 +3,7 @@ const getSquare = require('./get-square')
 const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
 const assertTypes = require('./assert-types')
 const moveMap = require('./iterate-over-move-squares').map
-const isCapstone = require('./is-capstone')
+const { topPieceOfSquare: topPieceIsCapstone, piece: isCapstone } = require('./is-capstone')
 
 const validityChecks = {
 	PLACE: placeIsValid,
@@ -94,8 +94,3 @@ function doesNotHitABlockingPiece(boardState, move) {
 	}).every(pieceDeetz => (!pieceDeetz.capstone && !pieceDeetz.topIsStanding) || (pieceDeetz.topIsStanding && pieceDeetz.droppingOnlyACapstone))
 }
 
-function topPieceIsCapstone(square) {
-	const pieces = square.pieces
-	return pieces.length > 0
-		&& isCapstone(pieces[pieces.length - 1])
-}

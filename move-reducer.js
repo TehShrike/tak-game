@@ -3,7 +3,7 @@ const immutableUpdate = require('immutability-helper')
 const getSquare = require('./get-square')
 const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
 const reduceMove = require('./iterate-over-move-squares').reduce
-const isCapstone = require('./is-capstone')
+const { piece: isCapstone } = require('./is-capstone')
 
 module.exports = makeReducer({
     PLACE: applyPlace,

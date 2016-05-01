@@ -18,6 +18,24 @@ function defaultStartingPiecesByBoardSize(boardSize) {
 	}
 }
 
+function setPieceCounts({ size, whoseTurn, y }, pieceCounts) {
+	return {
+		size,
+		whoseTurn,
+		y,
+		piecesInHand: {
+			x: {
+				pieces: pieceCounts.x,
+				capstones: pieceCounts.X
+			},
+			o: {
+				pieces: pieceCounts.o,
+				capstones: pieceCounts.O
+			}
+		}
+	}
+}
+
 module.exports = function parsePosition(positionString, whoseTurn = 'x') {
 	const rows = positionString.trim().split('\n')
 	const size = rows.length
@@ -45,19 +63,11 @@ module.exports = function parsePosition(positionString, whoseTurn = 'x') {
 		})
 	})
 
-	return {
+	return setPieceCounts({
 		size,
 		whoseTurn,
-		y: rowStructure,
-		piecesInHand: {
-			x: {
-				pieces: pieceCounts.x,
-				capstones: pieceCounts.X
-			},
-			o: {
-				pieces: pieceCounts.o,
-				capstones: pieceCounts.O
-			}
-		}
-	}
+		y: rowStructure
+	}, pieceCounts)
 }
+
+module.exports.pieces = setPieceCounts
