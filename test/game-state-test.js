@@ -111,5 +111,81 @@ test('the game is over once all squares are filled: x wins', t => {
 	t.end()
 })
 
-// game end:
-// a road is made from one side to another
+function xy(x, y) {
+	return { x, y }
+}
+
+test('Win by vertical road', t => {
+	const { winner, gameOver, winningRoute } = getGameState(p(`
+		 |  |xo|x
+		x|xx|xO|
+		o|o |o |x
+		o|x |  |x
+	`))
+
+	t.ok(gameOver)
+	t.equal(winner, 'o')
+	t.deepEqual(winningRoute, {
+		x: null,
+		o: [xy(0,0), xy(0,1), xy(1,1), xy(2,1), xy(2,2), xy(2,3)]
+	})
+
+	t.end()
+})
+
+test('Win by horizontal road', t => {
+	const { winner, gameOver, winningRoute } = getGameState(p(`
+		 |  |xo|o
+		x|xX|ox|
+		o|o |x |o
+		o|x |x |x
+	`))
+
+	t.ok(gameOver)
+	t.equal(winner, 'x')
+	t.deepEqual(winningRoute, {
+		x: [xy(0,2), xy(1,2), xy(2,2), xy(2,1), xy(2,0), xy(3,0)],
+		o: null
+	})
+
+	t.end()
+})
+
+test('Tied winning routes', t => {
+	const { winner, gameOver, winningRoute } = getGameState(p(`
+		o|o |xx|o
+		x|xo|xo|o
+		x|x |x^|x
+		O|x |x |x
+	`))
+
+	t.ok(gameOver)
+	t.equal(winner, null)
+	t.deepEqual(winningRoute, {
+		x: [xy(0,1), xy(1,1), xy(1,0), xy(2,0), xy(3,0)],
+		o: [xy(0,3), xy(1,3), xy(1,2), xy(2,2), xy(3,2)]
+	})
+
+	t.end()
+})
+
+test('backtracking route on a 7x7 board', t => {
+	const { winner, gameOver, winningRoute } = getGameState(p(`
+		o|o^|xx|X|  |o|
+		x|xo|xo|o|o^|o|
+		x|xo|x^|o|ox|o|
+		O|xo|x |o|o |o|
+		 |o |o | |  | |
+		 |  |o | |xx| |
+		 |  |o | |  | |
+	`))
+
+	t.ok(gameOver)
+	t.equal(winner, 'o')
+	t.deepEqual(winningRoute, {
+		x: null,
+		o: [xy(2,0), xy(2,1), xy(2,2), xy(1,2), xy(1,3), xy(1,4), xy(1,5), xy(2,5), xy(3,5), xy(3,4), xy(3,3), xy(4,3), xy(5,3), xy(5,4), xy(5,5), xy(5,6)]
+	})
+
+	t.end()
+})

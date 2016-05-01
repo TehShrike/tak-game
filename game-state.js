@@ -1,14 +1,35 @@
 const { topPieceOfSquare: topPieceOfSquareIsCapstone } = require('./is-capstone')
+const findWinningRoute = require('./find-winning-route')
+const getOwner = require('./get-owner')
 
 module.exports = function gameState(boardState) {
 
 	const ownedSquares = countOwnedSquares(boardState)
-	const gameOver = someoneHasPlayedAllTheirPieces(boardState) || allSpacesAreFilled(boardState)
+	const winningXRoute = findWinningRoute(boardState, 'x', 'x') || findWinningRoute(boardState, 'y', 'x')
+	const winningORoute = findWinningRoute(boardState, 'x', 'o') || findWinningRoute(boardState, 'y', 'o')
+	const routeWin = winningXRoute || winningORoute
+	const gameOver = routeWin || someoneHasPlayedAllTheirPieces(boardState) || allSpacesAreFilled(boardState)
 
 	return {
 		gameOver,
-		winner: gameOver ? getWinnerByOwnedSquares(ownedSquares) : null,
-		ownedSquares
+		winner: gameOver ? getWinner({ boardState, ownedSquares, winningXRoute, winningORoute }) : null,
+		ownedSquares,
+		winningRoute: {
+			x: winningXRoute,
+			o: winningORoute
+		}
+	}
+}
+
+function getWinner({ boardState, ownedSquares, winningXRoute, winningORoute}) {
+	if (winningXRoute && winningORoute) {
+		return null
+	} else if (winningXRoute) {
+		return 'x'
+	} else if (winningORoute) {
+		return 'o'
+	} else {
+		return getWinnerByOwnedSquares(ownedSquares)
 	}
 }
 
@@ -32,10 +53,10 @@ function countOwnedSquares(boardState) {
 	boardState.y.forEach(x => {
 		x.filter(square => !topPieceOfSquareIsCapstone(square))
 		.filter(square => !square.topIsStanding)
-		.filter(square => square.pieces.length > 0)
-		.forEach(square => {
-			const topPiece = square.pieces[square.pieces.length - 1]
-			ownedSquares[topPiece]++
+		.map(getOwner)
+		.filter(owner => owner !== null)
+		.forEach(owner => {
+			ownedSquares[owner]++
 		})
 	})
 

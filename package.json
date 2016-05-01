@@ -26,6 +26,7 @@
   "dependencies": {
     "create-redux-reducer-from-map": "1.0.0",
     "immutability-helper": "2.0.0",
-    "redux": "3.5.2"
+    "redux": "3.5.2",
+    "xtend": "4.0.1"
   }
 }
