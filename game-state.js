@@ -3,12 +3,17 @@ const { topPieceOfSquare: topPieceOfSquareIsCapstone } = require('./is-capstone'
 module.exports = function gameState(boardState) {
 
 	const ownedSquares = countOwnedSquares(boardState)
+	const gameOver = someoneHasPlayedAllTheirPieces(boardState) || allSpacesAreFilled(boardState)
 
 	return {
-		gameOver: someoneHasPlayedAllTheirPieces(boardState),
-		winner: getWinnerByOwnedSquares(ownedSquares),
+		gameOver,
+		winner: gameOver ? getWinnerByOwnedSquares(ownedSquares) : null,
 		ownedSquares
 	}
+}
+
+function allSpacesAreFilled(boardState) {
+	return boardState.y.every(x => x.every(square => square.pieces.length > 0))
 }
 
 function getWinnerByOwnedSquares(ownedSquares) {

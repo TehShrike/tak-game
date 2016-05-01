@@ -16,8 +16,8 @@ test('game over when someone runs out of pieces', t => {
 		O: 0
 	}))
 
-	t.ok(gameState.gameOver)
-	t.equal(gameState.winner, 'x')
+	t.ok(gameState.gameOver, 'game is over')
+	t.equal(gameState.winner, 'x', 'x wins')
 	t.equal(gameState.ownedSquares.x, 3)
 	t.equal(gameState.ownedSquares.o, 2)
 
@@ -26,9 +26,9 @@ test('game over when someone runs out of pieces', t => {
 
 test(`The game's not over unless someone has used up all their pieces`, t => {
 	const boardState = p(`
-		xxx|ooo|xxx
-		   |x  |
-		   |ooo|
+		x|oo|xx
+		 |x |
+		 |oo|
 	`)
 
 	function assertNotOver(pieces) {
@@ -65,7 +65,51 @@ test(`The game's not over unless someone has used up all their pieces`, t => {
 	t.end()
 })
 
+test('the game is over once all squares are filled: tie', t => {
+	const boardState = p.pieces(p(`
+		xo |oox |xo^ |x
+		o  |x   |oxo |o
+		xx |oo  |ox^ |x
+		o  |xX  |o^  |ox
+	`), {
+		x: 1,
+		o: 1,
+		X: 1,
+		O: 1
+	})
+
+	const gameState = getGameState(boardState)
+
+	t.ok(gameState.gameOver, 'game is over')
+	t.equal(gameState.winner, null, 'nobody wins')
+	t.equal(gameState.ownedSquares.x, 6)
+	t.equal(gameState.ownedSquares.o, 6)
+
+	t.end()
+})
+
+test('the game is over once all squares are filled: x wins', t => {
+	const boardState = p.pieces(p(`
+		xo |oox |xo^ |x
+		o  |x   |oxo |o
+		xx |oo  |ox  |x
+		o  |xX  |o^  |ox
+	`), {
+		x: 1,
+		o: 1,
+		X: 1,
+		O: 1
+	})
+
+	const gameState = getGameState(boardState)
+
+	t.ok(gameState.gameOver, 'game is over')
+	t.equal(gameState.winner, 'x', 'x wins')
+	t.equal(gameState.ownedSquares.x, 7)
+	t.equal(gameState.ownedSquares.o, 6)
+
+	t.end()
+})
+
 // game end:
-// 1. someone is out of pieces
-// 2. every spot is filled
-// 3. a road is made from one side to another
+// a road is made from one side to another

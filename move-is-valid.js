@@ -21,13 +21,27 @@ module.exports = function moveIsValid(boardState, move) {
 function placeIsValid(boardState, move) {
 	assertTypes.place(move)
 
+	const firstTurn = isFirstTurn(boardState)
+
 	const correctPlayersTurn = move.piece.toLowerCase() === boardState.whoseTurn
 
-	return correctPlayersTurn
-		&& hasPiecesLeft(boardState, move)
-		&& notAStandingCapstone(move)
-		&& validPiece(move.piece)
-		&& getSquare(boardState, move).pieces.length === 0
+	if (firstTurn) {
+		return !correctPlayersTurn
+	} else {
+		return correctPlayersTurn
+			&& hasPiecesLeft(boardState, move)
+			&& notAStandingCapstone(move)
+			&& validPiece(move.piece)
+			&& getSquare(boardState, move).pieces.length === 0
+	}
+}
+
+function isFirstTurn(boardState) {
+	const piecesOnBoard = boardState.y.reduce((total, x) => {
+		return total + x.reduce((total, square) => total + square.pieces.length, 0)
+	}, 0)
+
+	return piecesOnBoard <= 2
 }
 
 function hasPiecesLeft(boardState, move) {

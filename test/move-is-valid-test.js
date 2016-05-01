@@ -17,6 +17,14 @@ function fewRandomPieces(whoseTurn) {
 	return boardState
 }
 
+function assertMoveIsValidExceptFor(t, move, key, value, message) {
+	t.ok(moveIsValid(move.board, move), `Valid portion: ${message}`)
+	move[key] = value
+	t.notOk(moveIsValid(move.board, move), message)
+}
+
+
+
 test('placing new stones', t => {
 	function testSpot(y, x, whoseTurn, piece, standing) {
 		return moveIsValid(fewRandomPieces(whoseTurn), {
@@ -70,6 +78,61 @@ test('placing new stones', t => {
 
 	t.end()
 })
+
+test(`During the first turn you can only place an opponent's piece`, t => {
+	function placementMove(piece) {
+		return {
+			type: 'PLACE',
+			x: 0,
+			y: 0,
+			piece,
+			standing: false
+		}
+	}
+
+	function placementAssertions(board) {
+		board.whoseTurn = 'o'
+
+		t.ok(moveIsValid(board, placementMove('x')), `o can place x on first turn`)
+
+		t.notOk(moveIsValid(board, placementMove('o')), `o can't place o on first turn`)
+
+		board.whoseTurn = 'x'
+
+		t.ok(moveIsValid(board, placementMove('o')), `x can place o on first turn`)
+
+		t.notOk(moveIsValid(board, placementMove('x')), `x can't place x on first turn`)
+	}
+
+	placementAssertions(p(`
+		|||
+		|||
+		|||
+		|||
+	`))
+
+	placementAssertions(p(`
+		|||
+		|||
+		|||x
+		|||
+	`))
+
+	placementAssertions(p(`
+		|||
+		|||
+		|||
+		|||o
+	`))
+
+	t.end()
+})
+
+// test(`during the first turn, you can't move that one piece`, t => {
+// 	const singlePieceBoard = p(`
+// 		x
+// 	`)
+// })
 
 test(`can't place when all your pieces are used up`, t => {
 	const allPiecesUsedUp = p(`
@@ -160,10 +223,9 @@ test('Invalid movements', t => {
 	const xTurn = startingStacks('x')
 	const oTurn = startingStacks('o')
 
-	function moveIsValidExceptFor(move, key, value, message) {
-		t.ok(moveIsValid(move.board, move), `Valid portion: ${message}`)
-		move[key] = value
-		t.notOk(moveIsValid(move.board, move), message)
+	function moveIsValidExceptFor(...args) {
+		args.unshift(t)
+		assertMoveIsValidExceptFor.apply(null, args)
 	}
 
 	moveIsValidExceptFor({
