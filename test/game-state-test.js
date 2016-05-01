@@ -16,7 +16,7 @@ test('game over when someone runs out of pieces', t => {
 		O: 0
 	}))
 
-	t.ok(gameState.gameOver, 'game is over')
+	t.equal(gameState.gameOver, true, 'game is over')
 	t.equal(gameState.winner, 'x', 'x wins')
 	t.equal(gameState.ownedSquares.x, 3)
 	t.equal(gameState.ownedSquares.o, 2)
@@ -34,7 +34,7 @@ test(`The game's not over unless someone has used up all their pieces`, t => {
 	function assertNotOver(pieces) {
 		const gameState = getGameState(p.pieces(boardState, pieces))
 
-		t.notOk(gameState.gameOver)
+		t.equal(gameState.gameOver, false)
 	}
 
 	assertNotOver({
@@ -80,7 +80,7 @@ test('the game is over once all squares are filled: tie', t => {
 
 	const gameState = getGameState(boardState)
 
-	t.ok(gameState.gameOver, 'game is over')
+	t.equal(gameState.gameOver, true, 'game is over')
 	t.equal(gameState.winner, null, 'nobody wins')
 	t.equal(gameState.ownedSquares.x, 6)
 	t.equal(gameState.ownedSquares.o, 6)
@@ -103,7 +103,7 @@ test('the game is over once all squares are filled: x wins', t => {
 
 	const gameState = getGameState(boardState)
 
-	t.ok(gameState.gameOver, 'game is over')
+	t.equal(gameState.gameOver, true, 'game is over')
 	t.equal(gameState.winner, 'x', 'x wins')
 	t.equal(gameState.ownedSquares.x, 7)
 	t.equal(gameState.ownedSquares.o, 6)
@@ -123,7 +123,7 @@ test('Win by vertical road', t => {
 		o|x |  |x
 	`))
 
-	t.ok(gameOver)
+	t.equal(gameOver, true, 'game is over')
 	t.equal(winner, 'o')
 	t.deepEqual(winningRoute, {
 		x: null,
@@ -141,7 +141,7 @@ test('Win by horizontal road', t => {
 		o|x |x |x
 	`))
 
-	t.ok(gameOver)
+	t.equal(gameOver, true, 'game is over')
 	t.equal(winner, 'x')
 	t.deepEqual(winningRoute, {
 		x: [xy(0,2), xy(1,2), xy(2,2), xy(2,1), xy(2,0), xy(3,0)],
@@ -159,7 +159,7 @@ test('Tied winning routes', t => {
 		O|x |x |x
 	`))
 
-	t.ok(gameOver)
+	t.equal(gameOver, true, 'game is over')
 	t.equal(winner, null)
 	t.deepEqual(winningRoute, {
 		x: [xy(0,1), xy(1,1), xy(1,0), xy(2,0), xy(3,0)],
@@ -180,7 +180,7 @@ test('backtracking route on a 7x7 board', t => {
 		 |  |o | |  | |
 	`))
 
-	t.ok(gameOver)
+	t.equal(gameOver, true, 'game is over')
 	t.equal(winner, 'o')
 	t.deepEqual(winningRoute, {
 		x: null,

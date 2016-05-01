@@ -7,7 +7,7 @@ module.exports = function gameState(boardState) {
 	const ownedSquares = countOwnedSquares(boardState)
 	const winningXRoute = findWinningRoute(boardState, 'x', 'x') || findWinningRoute(boardState, 'y', 'x')
 	const winningORoute = findWinningRoute(boardState, 'x', 'o') || findWinningRoute(boardState, 'y', 'o')
-	const routeWin = winningXRoute || winningORoute
+	const routeWin = !!(winningXRoute || winningORoute)
 	const gameOver = routeWin || someoneHasPlayedAllTheirPieces(boardState) || allSpacesAreFilled(boardState)
 
 	return {
