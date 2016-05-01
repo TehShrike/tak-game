@@ -6,8 +6,8 @@ const moveMap = require('./iterate-over-move-squares').map
 const { topPieceOfSquare: topPieceIsCapstone, piece: isCapstone } = require('./is-capstone')
 
 const validityChecks = {
-	PLACE: placeIsValid,
-	MOVE: moveIsValid
+	PLACE: canPlace,
+	MOVE: canMove
 }
 
 module.exports = function moveIsValid(boardState, move) {
@@ -18,7 +18,7 @@ module.exports = function moveIsValid(boardState, move) {
 	return false
 }
 
-function placeIsValid(boardState, move) {
+function canPlace(boardState, move) {
 	assertTypes.place(move)
 
 	const firstTurn = isFirstTurn(boardState)
@@ -55,8 +55,12 @@ function notAStandingCapstone(move) {
 }
 
 
-function moveIsValid(boardState, move) {
+function canMove(boardState, move) {
 	assertTypes.move(move)
+
+	if (isFirstTurn(boardState)) {
+		return false
+	}
 
 	const startingSquare = getSquare(boardState, move)
 

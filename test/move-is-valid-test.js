@@ -128,11 +128,30 @@ test(`During the first turn you can only place an opponent's piece`, t => {
 	t.end()
 })
 
-// test(`during the first turn, you can't move that one piece`, t => {
-// 	const singlePieceBoard = p(`
-// 		x
-// 	`)
-// })
+test(`during the first turn, you can't move that one piece`, t => {
+	const singlePieceBoard = p(`
+		x||
+		 ||
+		 ||
+	`)
+	const severalPieceBoard = p(`
+		x|o|x
+		 | |
+		 | |
+	`)
+
+	assertMoveIsValidExceptFor(t, {
+		board: severalPieceBoard,
+		type: 'MOVE',
+		x: 0,
+		y: 2,
+		axis: 'y',
+		direction: '-',
+		drops: [0, 1]
+	}, 'board', singlePieceBoard, `Can't move during the first turn`)
+
+	t.end()
+})
 
 test(`can't place when all your pieces are used up`, t => {
 	const allPiecesUsedUp = p(`
