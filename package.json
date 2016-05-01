@@ -4,7 +4,7 @@
   "description": "Tak!",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/*.js | faucet"
+    "test": "tape test/*.js | faucet && echo 'Testing readme examples...' && jsmd readme.md && echo 'All done!'"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/TehShrike/tak-game#readme",
   "devDependencies": {
     "faucet": "0.0.1",
+    "jsmd": "0.3.1",
     "tape": "4.5.1"
   },
   "dependencies": {
