@@ -4,6 +4,7 @@ const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
 const assertTypes = require('./assert-types')
 const moveMap = require('./iterate-over-move-squares').map
 const { topPieceOfSquare: topPieceIsCapstone, piece: isCapstone } = require('./is-capstone')
+const squareIsOwnedBy = require('./square-is-owned-by')
 
 const validityChecks = {
 	PLACE: canPlace,
@@ -88,10 +89,6 @@ function dropsAddUpToPickedUp(boardState, move) {
 	return move.drops.reduce((total, drop) => total + drop) === pickedUpCount
 }
 
-function squareIsOwnedBy(square, owner) {
-	return square.pieces.length > 0
-		&& square.pieces[square.pieces.length - 1].toLowerCase() === owner
-}
 
 function doesNotHitABlockingPiece(boardState, move) {
 	return moveMap(boardState, move, ({ coordinates, first, piecesBeingDropped }) => {
