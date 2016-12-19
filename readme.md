@@ -6,17 +6,40 @@ Based on the [beta rules](http://cheapass.com/sites/default/files/TakBetaRules3-
 
 ## API
 
-```
+```js
 const { moveIsValid, moveReducer, gameState } = require('tak-game')
 ```
 
-- `moveIsValid(moveAction)` - returns `true`/`false`.  Will throw errors on bad types.
+- `moveIsValid(boardState, moveAction)` - returns `true`/`false`.  Will throw errors on bad types.
 - `moveReducer(boardState, moveAction)` - returns a new board state.  Acceptable action types are `'PLACE'` and `'MOVE'`.  Is a valid [Redux](http://redux.js.org/) reducer.
 - `gameState(boardState)` - returns details about the game derived from the board state:
 	- `gameOver` - true/false
 	- `winner` - `null`/`'x'`/`'o'`
 	- `ownedSquares` - `{ x: [number], o: [number] }`
 	- `winningRoute` - `{ x: [array of x/y coordinates], o: [array of x/y coordinates] }`
+	
+An example `moveAction` for placing a piece:
+```js
+{
+	type: 'PLACE',
+	x: 1,
+	y: 2,
+	piece: 'x',
+	standing: false
+}
+```
+
+An example `moveAction` for moving a stack:
+```js
+{
+	type: 'MOVE',
+	y: 0,
+	x: 3,
+	axis: 'x',
+	direction: '-',
+	drops: [1, 1, 1, 1]
+}
+```
 
 ## Examples
 
