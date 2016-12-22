@@ -17,10 +17,10 @@ const { moveIsValid, moveReducer, gameState } = require('tak-game')
 	- `winner` - `null`/`'x'`/`'o'`
 	- `ownedSquares` - `{ x: [number], o: [number] }`
 	- `winningRoute` - `{ x: [array of x/y coordinates], o: [array of x/y coordinates] }`
-	
+
 An example `moveAction` for placing a piece:
 ```js
-{
+const placeAction = {
 	type: 'PLACE',
 	x: 1,
 	y: 2,
@@ -31,7 +31,7 @@ An example `moveAction` for placing a piece:
 
 An example `moveAction` for moving a stack:
 ```js
-{
+const moveAction = {
 	type: 'MOVE',
 	y: 0,
 	x: 3,
@@ -44,7 +44,6 @@ An example `moveAction` for moving a stack:
 ## Examples
 
 ```js
-const { moveIsValid, moveReducer, gameState } = require('.')
 
 const boardState = { size: 4,
   whoseTurn: 'o',
