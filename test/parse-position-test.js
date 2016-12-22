@@ -20,9 +20,9 @@ test('import 3x3 board', t => {
 	const expected = {
 		size: 3,
 		y: [
-			[p([x, x, o], true), p([x]), p()],
-			[p(), p([o, o, x, O]), p([x])],
-			[p([x, o]), p(), p([o, x])]
+			[ p([ x, x, o ], true), p([ x ]), p() ],
+			[ p(), p([ o, o, x, O ]), p([ x ]) ],
+			[ p([ x, o ]), p(), p([ o, x ]) ]
 		],
 		piecesInHand: {
 			x: {
@@ -51,9 +51,9 @@ test('import 4x4 board', t => {
 	const expected = {
 		size: 3,
 		y: [
-			[p(), p([x, X]), p()],
-			[p(), p([o, o, x], true), p([x, o, X])],
-			[p([x, o]), p(), p([o, x])]
+			[ p(), p([ x, X ]), p() ],
+			[ p(), p([ o, o, x ], true), p([ x, o, X ]) ],
+			[ p([ x, o ]), p(), p([ o, x ]) ]
 		],
 		piecesInHand: {
 			x: {
