@@ -6,7 +6,11 @@ Based on the [beta rules](http://cheapass.com/sites/default/files/TakBetaRules3-
 
 ## API
 
-```js
+<!-- js
+const { moveIsValid, moveReducer, gameState } = require('.')
+-->
+
+```
 const { moveIsValid, moveReducer, gameState } = require('tak-game')
 ```
 
@@ -44,7 +48,6 @@ const moveAction = {
 ## Examples
 
 ```js
-
 const boardState = { size: 4,
   whoseTurn: 'o',
   y:
