@@ -1,22 +1,5 @@
 const validPiece = require('./valid-piece')
-
-function defaultStartingPiecesByBoardSize(boardSize) {
-	switch (boardSize) {
-		case 3:
-			return { pieces: 10, capstones: 0 }
-		case 4:
-			return { pieces: 15, capstones: 0 }
-		case 5:
-			return { pieces: 21, capstones: 1 }
-		case 6:
-			return { pieces: 30, capstones: 1 }
-		case 7:
-			return { pieces: 40, capstones: 1 }
-		default:
-		case 8:
-			return { pieces: 50, capstones: 2 }
-	}
-}
+const startingPiecesByBoardSize = require('./starting-piece-counts')
 
 function setPieceCounts({ size, whoseTurn, y }, pieceCounts) {
 	return {
@@ -39,7 +22,7 @@ function setPieceCounts({ size, whoseTurn, y }, pieceCounts) {
 module.exports = function parsePosition(positionString, whoseTurn = 'x') {
 	const rows = positionString.trim().split('\n')
 	const size = rows.length
-	const { pieces: startingPieces, capstones: startingCapstones } = defaultStartingPiecesByBoardSize(size)
+	const { pieces: startingPieces, capstones: startingCapstones } = startingPiecesByBoardSize(size)
 	const pieceCounts = {
 		x: startingPieces,
 		X: startingCapstones,
