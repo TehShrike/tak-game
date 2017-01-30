@@ -1,6 +1,6 @@
 {
   "name": "tak-game",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Tak!",
   "main": "index.js",
   "scripts": {
