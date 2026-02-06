@@ -1,9 +1,10 @@
-const { test } = require('node:test')
-const assert = require('node:assert')
-const moveIsValid = require('../move-is-valid')
-const p = require('../parse-position')
+import { test } from 'node:test'
+import assert from 'node:assert'
+import moveIsValid from '../move-is-valid.ts'
+import p from '../parse-position.ts'
+import type { BoardState, Player, Piece, PlaceMove, MoveMove } from '../types.ts'
 
-function fewRandomPieces(whoseTurn) {
+function fewRandomPieces(whoseTurn: Player): BoardState {
 	const boardState = p(`
 		x|    |
 		 |oX  |O
@@ -18,16 +19,20 @@ function fewRandomPieces(whoseTurn) {
 	return boardState
 }
 
-function assertMoveIsValidExceptFor(move, key, value, message) {
+interface MoveWithBoard extends MoveMove {
+	board: BoardState
+}
+
+function assertMoveIsValidExceptFor(move: MoveWithBoard, key: keyof MoveWithBoard, value: unknown, message: string) {
 	assert.ok(moveIsValid(move.board, move), `Valid portion: ${message}`)
-	move[key] = value
+	;(move as unknown as Record<string, unknown>)[key] = value
 	assert.ok(!moveIsValid(move.board, move), message)
 }
 
 
 
 test('placing new stones', () => {
-	function testSpot(y, x, whoseTurn, piece, standing) {
+	function testSpot(y: number, x: number, whoseTurn: Player, piece: Piece, standing: boolean) {
 		return moveIsValid(fewRandomPieces(whoseTurn), {
 			type: 'PLACE',
 			x,
@@ -36,13 +41,13 @@ test('placing new stones', () => {
 			standing
 		})
 	}
-	function testEmptySpot(whoseTurn, piece, standing = false) {
+	function testEmptySpot(whoseTurn: Player, piece: Piece, standing = false) {
 		return testSpot(2, 1, whoseTurn, piece, standing)
 	}
-	function testSpotWithStandingTop(whoseTurn, piece, standing = false) {
+	function testSpotWithStandingTop(whoseTurn: Player, piece: Piece, standing = false) {
 		return testSpot(0, 1, whoseTurn, piece, standing)
 	}
-	function testSpotWithCapstone(whoseTurn, piece, standing = false) {
+	function testSpotWithCapstone(whoseTurn: Player, piece: Piece, standing = false) {
 		return testSpot(1, 2, whoseTurn, piece, standing)
 	}
 
@@ -79,7 +84,7 @@ test('placing new stones', () => {
 })
 
 test(`During the first turn you can only place an opponent's piece`, () => {
-	function placementMove(piece) {
+	function placementMove(piece: Piece): PlaceMove {
 		return {
 			type: 'PLACE',
 			x: 0,
@@ -89,7 +94,7 @@ test(`During the first turn you can only place an opponent's piece`, () => {
 		}
 	}
 
-	function placementAssertions(board) {
+	function placementAssertions(board: BoardState) {
 		board.whoseTurn = 'o'
 
 		assert.ok(moveIsValid(board, placementMove('x')), `o can place x on first turn`)
@@ -200,27 +205,28 @@ test(`can't place when all your pieces are used up`, () => {
 test('only x and o are allowed piece types', () => {
 	const empty = { y: 2, x: 1 }
 	assert.throws(() => {
-		moveIsValid(fewRandomPieces, {
+		moveIsValid(fewRandomPieces('x'), {
 			type: 'PLACE',
 			x: empty.x,
 			y: empty.y,
-			piece: 'y',
+			piece: 'y' as Piece,
 			standing: false
 		})
 	})
 })
 
 test('invalid types are invalid', () => {
-	assert.ok(!moveIsValid(fewRandomPieces, {
-		type: 'BUTTS',
+	assert.ok(!moveIsValid(fewRandomPieces('x'), {
+		type: 'BUTTS' as 'PLACE',
 		y: 0,
 		x: 0,
-		piece: 'x'
+		piece: 'x',
+		standing: false
 	}))
 })
 
 test('Invalid movements', () => {
-	function startingStacks(whoseTurn) {
+	function startingStacks(whoseTurn: Player) {
 		return p(`
 			xxooxx|oo|X  |
 			oox   |oO|ooo|o

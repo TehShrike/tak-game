@@ -1,7 +1,15 @@
-const validPiece = require('./valid-piece')
-const startingPiecesByBoardSize = require('./starting-piece-counts')
+import validPiece from './valid-piece.ts'
+import startingPiecesByBoardSize from './starting-piece-counts.ts'
+import type { BoardState, Player, Piece, Square } from './types.ts'
 
-function setPieceCounts({ size, whoseTurn, y }, pieceCounts) {
+interface PieceCounts {
+	x: number
+	X: number
+	o: number
+	O: number
+}
+
+function setPieceCounts({ size, whoseTurn, y }: { size: number; whoseTurn: Player; y: Square[][] }, pieceCounts: PieceCounts): BoardState {
 	return {
 		size,
 		whoseTurn,
@@ -19,25 +27,25 @@ function setPieceCounts({ size, whoseTurn, y }, pieceCounts) {
 	}
 }
 
-module.exports = function parsePosition(positionString, whoseTurn = 'x') {
+function parsePosition(positionString: string, whoseTurn: Player = 'x'): BoardState {
 	const rows = positionString.trim().split('\n')
 	const size = rows.length
 	const { pieces: startingPieces, capstones: startingCapstones } = startingPiecesByBoardSize(size)
-	const pieceCounts = {
+	const pieceCounts: PieceCounts = {
 		x: startingPieces,
 		X: startingCapstones,
 		o: startingPieces,
 		O: startingCapstones
 	}
 
-	const rowStructure = rows.map(column => {
+	const rowStructure: Square[][] = rows.map(column => {
 		const spaces = column.split('|')
 		if (spaces.length !== size) {
 			throw new Error(`Wrong number of spaces in row, should have been ${size} but was ${spaces.length}`)
 		}
 		return spaces.map(space => {
 			const rowCharacters = space.trim().split('')
-			const pieces = rowCharacters.filter(validPiece)
+			const pieces = rowCharacters.filter((c): c is Piece => validPiece(c))
 			pieces.forEach(piece => pieceCounts[piece]--)
 			return {
 				topIsStanding: rowCharacters.length > 1 && rowCharacters[rowCharacters.length - 1] === '^',
@@ -53,4 +61,6 @@ module.exports = function parsePosition(positionString, whoseTurn = 'x') {
 	}, pieceCounts)
 }
 
-module.exports.pieces = setPieceCounts
+parsePosition.pieces = setPieceCounts
+
+export default parsePosition

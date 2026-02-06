@@ -1,11 +1,11 @@
-const { test } = require('node:test')
-const assert = require('node:assert')
-const createBoardState = require('../create-board-state')
+import { test } from 'node:test'
+import assert from 'node:assert'
+import createBoardState from '../create-board-state.ts'
 
 test('Create an empty board of size 4', () => {
 	const expected = {
 		size: 4,
-		whoseTurn: 'x',
+		whoseTurn: 'x' as const,
 		y: [
 			[
 				{ topIsStanding: false, pieces: [] },
@@ -43,7 +43,7 @@ test('Create an empty board of size 4', () => {
 test('Create an empty board of size 5', () => {
 	const expected = {
 		size: 5,
-		whoseTurn: 'x',
+		whoseTurn: 'x' as const,
 		y: [
 			[
 				{ topIsStanding: false, pieces: [] },
@@ -89,7 +89,7 @@ test('Create an empty board of size 5', () => {
 })
 
 test('Correct piece counts at different board sizes', () => {
-	function testCreation(boardSize, expectedPieces, expectedCapstones) {
+	function testCreation(boardSize: number, expectedPieces: number, expectedCapstones: number) {
 		const boardState = createBoardState(boardSize)
 
 		assert.strictEqual(boardState.piecesInHand.x.pieces, expectedPieces, `Correct number of pieces for X at board size ${boardSize}`)

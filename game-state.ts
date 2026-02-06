@@ -1,9 +1,9 @@
-const { topPieceOfSquare: topPieceOfSquareIsCapstone } = require('./is-capstone')
-const findWinningRoute = require('./find-winning-route')
-const getOwner = require('./get-owner')
+import { topPieceOfSquare as topPieceOfSquareIsCapstone } from './is-capstone.ts'
+import findWinningRoute from './find-winning-route.ts'
+import getOwner from './get-owner.ts'
+import type { BoardState, GameState, Player, Coordinates } from './types.ts'
 
-module.exports = function gameState(boardState) {
-
+export default function gameState(boardState: BoardState): GameState {
 	const ownedSquares = countOwnedSquares(boardState)
 	const winningXRoute = findWinningRoute(boardState, 'x', 'x') || findWinningRoute(boardState, 'y', 'x')
 	const winningORoute = findWinningRoute(boardState, 'x', 'o') || findWinningRoute(boardState, 'y', 'o')
@@ -21,7 +21,14 @@ module.exports = function gameState(boardState) {
 	}
 }
 
-function getWinner({ boardState, ownedSquares, winningXRoute, winningORoute}) {
+interface GetWinnerParams {
+	boardState: BoardState
+	ownedSquares: { x: number; o: number }
+	winningXRoute: Coordinates[] | null
+	winningORoute: Coordinates[] | null
+}
+
+function getWinner({ ownedSquares, winningXRoute, winningORoute }: GetWinnerParams): Player | null {
 	if (winningXRoute && winningORoute) {
 		return null
 	} else if (winningXRoute) {
@@ -33,11 +40,11 @@ function getWinner({ boardState, ownedSquares, winningXRoute, winningORoute}) {
 	}
 }
 
-function allSpacesAreFilled(boardState) {
+function allSpacesAreFilled(boardState: BoardState): boolean {
 	return boardState.y.every(x => x.every(square => square.pieces.length > 0))
 }
 
-function getWinnerByOwnedSquares(ownedSquares) {
+function getWinnerByOwnedSquares(ownedSquares: { x: number; o: number }): Player | null {
 	if (ownedSquares.x === ownedSquares.o) {
 		return null
 	}
@@ -45,26 +52,26 @@ function getWinnerByOwnedSquares(ownedSquares) {
 	return ownedSquares.x > ownedSquares.o ? 'x' : 'o'
 }
 
-function countOwnedSquares(boardState) {
+function countOwnedSquares(boardState: BoardState): { x: number; o: number } {
 	const ownedSquares = {
 		x: 0,
 		o: 0
 	}
-	boardState.y.forEach(x => {
-		x.filter(square => !topPieceOfSquareIsCapstone(square))
-		.filter(square => !square.topIsStanding)
-		.map(getOwner)
-		.filter(owner => owner !== null)
-		.forEach(owner => {
-			ownedSquares[owner]++
-		})
+	boardState.y.forEach(row => {
+		row.filter(square => !topPieceOfSquareIsCapstone(square))
+			.filter(square => !square.topIsStanding)
+			.map(getOwner)
+			.filter((owner): owner is Player => owner !== null)
+			.forEach(owner => {
+				ownedSquares[owner]++
+			})
 	})
 
 	return ownedSquares
 }
 
-function someoneHasPlayedAllTheirPieces(boardState) {
-	function personHasPlayedAll(piece) {
+function someoneHasPlayedAllTheirPieces(boardState: BoardState): boolean {
+	function personHasPlayedAll(piece: Player): boolean {
 		return boardState.piecesInHand[piece].pieces === 0 && boardState.piecesInHand[piece].capstones === 0
 	}
 

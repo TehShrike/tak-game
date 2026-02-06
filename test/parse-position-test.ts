@@ -1,29 +1,30 @@
-const { test } = require('node:test')
-const assert = require('node:assert')
-const parsePosition = require('../parse-position')
+import { test } from 'node:test'
+import assert from 'node:assert'
+import parsePosition from '../parse-position.ts'
+import type { Piece, Square } from '../types.ts'
 
-function p(pieces = [], topIsStanding = false) {
+function sq(pieces: Piece[] = [], topIsStanding = false): Square {
 	return { pieces, topIsStanding }
 }
 
-const x = 'x'
-const o = 'o'
-const X = 'X'
-const O = 'O'
+const x: Piece = 'x'
+const o: Piece = 'o'
+const X: Piece = 'X'
+const O: Piece = 'O'
 
 test('import 3x3 board', () => {
 	const actual = parsePosition(`
 		xxo^|x   |
 		    |ooxO|x
 		xo  |    |ox
-	`, o)
+	`, 'o')
 
 	const expected = {
 		size: 3,
 		y: [
-			[ p([ x, x, o ], true), p([ x ]), p() ],
-			[ p(), p([ o, o, x, O ]), p([ x ]) ],
-			[ p([ x, o ]), p(), p([ o, x ]) ]
+			[ sq([ x, x, o ], true), sq([ x ]), sq() ],
+			[ sq(), sq([ o, o, x, O ]), sq([ x ]) ],
+			[ sq([ x, o ]), sq(), sq([ o, x ]) ]
 		],
 		piecesInHand: {
 			x: {
@@ -35,7 +36,7 @@ test('import 3x3 board', () => {
 				capstones: -1
 			}
 		},
-		whoseTurn: 'o'
+		whoseTurn: 'o' as const
 	}
 
 	assert.deepStrictEqual(actual, expected)
@@ -51,9 +52,9 @@ test('import 4x4 board', () => {
 	const expected = {
 		size: 3,
 		y: [
-			[ p(), p([ x, X ]), p() ],
-			[ p(), p([ o, o, x ], true), p([ x, o, X ]) ],
-			[ p([ x, o ]), p(), p([ o, x ]) ]
+			[ sq(), sq([ x, X ]), sq() ],
+			[ sq(), sq([ o, o, x ], true), sq([ x, o, X ]) ],
+			[ sq([ x, o ]), sq(), sq([ o, x ]) ]
 		],
 		piecesInHand: {
 			x: {
@@ -65,7 +66,7 @@ test('import 4x4 board', () => {
 				capstones: 0
 			}
 		},
-		whoseTurn: 'x'
+		whoseTurn: 'x' as const
 	}
 
 	assert.deepStrictEqual(actual, expected)

@@ -1,21 +1,22 @@
-const getPiecesPickedUpFromSquare = require('./pieces-picked-up-from-square')
-const getSquare = require('./get-square')
+import getPiecesPickedUpFromSquare from './pieces-picked-up-from-square.ts'
+import getSquare from './get-square.ts'
+import type { BoardState, MoveMove, MoveDetails, Piece } from './types.ts'
 
 // non-obvious caveat: you can't call these functions after picking
 // up the stack from the original spot
 
-function moveDetails(startingBoardState, move) {
+function moveDetails(startingBoardState: BoardState, move: MoveMove): (numberOfPiecesToDrop: number, offset: number) => MoveDetails {
 	const startingSquare = getSquare(startingBoardState, move)
 	const toPickUp = getPiecesPickedUpFromSquare(startingBoardState, move)
 
 	// mutability warning: only ok because the array contains primitives
-	const stackToMove = startingSquare.pieces.slice(-toPickUp)
+	const stackToMove = startingSquare.pieces.slice(-toPickUp) as Piece[]
 
-	function adjust(current, offset) {
+	function adjust(current: number, offset: number): number {
 		return current + (move.direction === '+' ? offset : (-offset))
 	}
 
-	function getNextSquareCoordinates(offset) {
+	function getNextSquareCoordinates(offset: number): { x: number; y: number } {
 		const coordinates = {
 			x: move.x,
 			y: move.y
@@ -24,7 +25,7 @@ function moveDetails(startingBoardState, move) {
 		return coordinates
 	}
 
-	return function(numberOfPiecesToDrop, offset) {
+	return function(numberOfPiecesToDrop: number, offset: number): MoveDetails {
 		const currentSquareCoordinates = getNextSquareCoordinates(offset)
 		const firstDrop = offset === 0
 		const lastDrop = offset === move.drops.length - 1
@@ -39,32 +40,26 @@ function moveDetails(startingBoardState, move) {
 	}
 }
 
-function reduce(startingBoardState, move, fn) {
+export function reduce<T>(startingBoardState: BoardState, move: MoveMove, fn: (acc: T, details: MoveDetails) => T, initial: T): T {
 	const getDetails = moveDetails(startingBoardState, move)
-	return move.drops.reduce((boardState, numberOfPiecesToDrop, offset) => {
+	return move.drops.reduce((acc: T, numberOfPiecesToDrop: number, offset: number) => {
 		const details = getDetails(numberOfPiecesToDrop, offset)
-		return fn(boardState, details)
-	}, startingBoardState)
+		return fn(acc, details)
+	}, initial)
 }
 
-function forEach(startingBoardState, move, fn) {
+export function forEach(startingBoardState: BoardState, move: MoveMove, fn: (details: MoveDetails) => void): void {
 	const getDetails = moveDetails(startingBoardState, move)
-	return move.drops.forEach((numberOfPiecesToDrop, offset) => {
+	move.drops.forEach((numberOfPiecesToDrop: number, offset: number) => {
 		const details = getDetails(numberOfPiecesToDrop, offset)
 		fn(details)
 	})
 }
 
-function map(startingBoardState, move, fn) {
+export function map<T>(startingBoardState: BoardState, move: MoveMove, fn: (details: MoveDetails) => T): T[] {
 	const getDetails = moveDetails(startingBoardState, move)
-	return move.drops.map((numberOfPiecesToDrop, offset) => {
+	return move.drops.map((numberOfPiecesToDrop: number, offset: number) => {
 		const details = getDetails(numberOfPiecesToDrop, offset)
 		return fn(details)
 	})
-}
-
-module.exports = {
-	reduce,
-	forEach,
-	map
 }

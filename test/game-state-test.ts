@@ -1,7 +1,7 @@
-const { test } = require('node:test')
-const assert = require('node:assert')
-const p = require('../parse-position')
-const getGameState = require('../game-state')
+import { test } from 'node:test'
+import assert from 'node:assert'
+import p from '../parse-position.ts'
+import getGameState from '../game-state.ts'
 
 test('game over when someone runs out of pieces', () => {
 	const boardState = p(`
@@ -30,7 +30,7 @@ test(`The game's not over unless someone has used up all their pieces`, () => {
 		 |oo|
 	`)
 
-	function assertNotOver(pieces) {
+	function assertNotOver(pieces: { x: number; X: number; o: number; O: number }) {
 		const gameState = getGameState(p.pieces(boardState, pieces))
 
 		assert.strictEqual(gameState.gameOver, false)
@@ -104,7 +104,7 @@ test('the game is over once all squares are filled: x wins', () => {
 	assert.strictEqual(gameState.ownedSquares.o, 6)
 })
 
-function xy(x, y) {
+function xy(x: number, y: number) {
 	return { x, y }
 }
 

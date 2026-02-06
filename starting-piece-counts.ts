@@ -1,4 +1,6 @@
-module.exports = function defaultStartingPiecesByBoardSize(boardSize) {
+import type { PieceCount } from './types.ts'
+
+export default function defaultStartingPiecesByBoardSize(boardSize: number): PieceCount {
 	switch (boardSize) {
 	case 3:
 		return { pieces: 10, capstones: 0 }

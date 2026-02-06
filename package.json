@@ -2,9 +2,14 @@
   "name": "tak-game",
   "version": "0.1.0",
   "description": "Tak!",
-  "main": "index.js",
+  "type": "module",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
   "scripts": {
-    "test": "node --test test/*.js && echo 'Testing readme examples...' && jsmd readme.md && echo 'All done!'"
+    "test": "node --test test/*.ts && echo 'Testing readme examples...' && jsmd readme.md && echo 'All done!'",
+    "test:types": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -20,11 +25,11 @@
   },
   "homepage": "https://github.com/TehShrike/tak-game#readme",
   "devDependencies": {
-    "jsmd": "0.3.1"
+    "@types/node": "^22.0.0",
+    "jsmd": "0.3.1",
+    "typescript": "^5.7.0"
   },
   "dependencies": {
-    "create-redux-reducer-from-map": "1.0.0",
-    "immutability-helper": "2.0.0",
-    "xtend": "4.0.1"
+    "immutability-helper": "^3.1.1"
   }
 }

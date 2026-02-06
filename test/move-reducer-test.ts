@@ -1,10 +1,11 @@
-const { test } = require('node:test')
-const assert = require('node:assert')
-const p = require('../parse-position')
-const apply = require('../move-reducer')
-const moveIsValid = require('../move-is-valid')
+import { test } from 'node:test'
+import assert from 'node:assert'
+import p from '../parse-position.ts'
+import apply from '../move-reducer.ts'
+import moveIsValid from '../move-is-valid.ts'
+import type { BoardState, Player, PlaceMove, MoveMove } from '../types.ts'
 
-function fewRandomPieces(whoseTurn = 'x') {
+function fewRandomPieces(whoseTurn: Player = 'x'): BoardState {
 	return p(`
 		x|  |
 		 |  |O
@@ -13,7 +14,7 @@ function fewRandomPieces(whoseTurn = 'x') {
 }
 
 test('place a new piece', () => {
-	const move = {
+	const move: PlaceMove = {
 		type: 'PLACE',
 		x: 1,
 		y: 2,
@@ -33,7 +34,7 @@ test('place a new piece', () => {
 })
 
 test('place a new standing piece', () => {
-	const move = {
+	const move: PlaceMove = {
 		type: 'PLACE',
 		x: 1,
 		y: 2,
@@ -53,7 +54,7 @@ test('place a new standing piece', () => {
 })
 
 test('place a new capstone', () => {
-	const move = {
+	const move: PlaceMove = {
 		type: 'PLACE',
 		x: 1,
 		y: 2,
@@ -78,7 +79,7 @@ test('place a new capstone', () => {
 })
 
 test('move a stack', () => {
-	function startingStacks(whoseTurn) {
+	function startingStacks(whoseTurn: Player): BoardState {
 		return p(`
 			xxooxx|oo|X  |
 			oox   |O |ooo|o
@@ -87,7 +88,7 @@ test('move a stack', () => {
 		`, whoseTurn)
 	}
 
-	function testMove(message, move, whoseTurn, expected) {
+	function testMove(message: string, move: MoveMove, whoseTurn: Player, expected: BoardState) {
 		assert.ok(moveIsValid(startingStacks(whoseTurn), move), `VALID: ${message}`)
 		assert.deepStrictEqual(apply(startingStacks(whoseTurn), move), expected, message)
 	}
