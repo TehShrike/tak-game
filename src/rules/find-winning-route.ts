@@ -2,7 +2,7 @@ import getSquare from '../board/get-square.ts'
 import getOwner from '../board/get-owner.ts'
 import type { BoardState, Axis, Player, Coordinates, Square } from '../types.ts'
 
-interface Step {
+type Step = {
 	coordinates: Coordinates
 	history: Record<string, boolean>
 	routeSoFar: Coordinates[]

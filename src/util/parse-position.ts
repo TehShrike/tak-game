@@ -2,7 +2,7 @@ import validPiece from '../rules/valid-piece.ts'
 import startingPiecesByBoardSize from '../rules/starting-piece-counts.ts'
 import type { BoardState, Player, Piece, Square } from '../types.ts'
 
-interface PieceCounts {
+type PieceCounts = {
 	x: number
 	X: number
 	o: number

@@ -19,7 +19,7 @@ function fewRandomPieces(whoseTurn: Player): BoardState {
 	return boardState
 }
 
-interface MoveWithBoard extends MoveMove {
+type MoveWithBoard = MoveMove & {
 	board: BoardState
 }
 

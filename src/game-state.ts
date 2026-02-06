@@ -21,7 +21,7 @@ export default function gameState(boardState: BoardState): GameState {
 	}
 }
 
-interface GetWinnerParams {
+type GetWinnerParams = {
 	boardState: BoardState
 	ownedSquares: { x: number; o: number }
 	winningXRoute: Coordinates[] | null

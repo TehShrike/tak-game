@@ -93,7 +93,7 @@ function dropsAddUpToPickedUp(boardState: BoardState, move: MoveMove): boolean {
 	return move.drops.reduce((total, drop) => total + drop, 0) === pickedUpCount
 }
 
-interface PieceDeetz {
+type PieceDeetz = {
 	capstone: boolean
 	topIsStanding?: boolean
 	standing?: boolean
