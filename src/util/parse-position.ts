@@ -1,6 +1,6 @@
-import validPiece from './valid-piece.ts'
-import startingPiecesByBoardSize from './starting-piece-counts.ts'
-import type { BoardState, Player, Piece, Square } from './types.ts'
+import validPiece from '../rules/valid-piece.ts'
+import startingPiecesByBoardSize from '../rules/starting-piece-counts.ts'
+import type { BoardState, Player, Piece, Square } from '../types.ts'
 
 interface PieceCounts {
 	x: number

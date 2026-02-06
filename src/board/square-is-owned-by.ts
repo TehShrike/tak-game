@@ -1,4 +1,4 @@
-import type { Player, Square } from './types.ts'
+import type { Player, Square } from '../types.ts'
 
 export default function squareIsOwnedBy(square: Square, owner: Player): boolean {
 	return square.pieces.length > 0

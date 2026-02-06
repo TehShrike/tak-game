@@ -1,4 +1,4 @@
-import type { PieceCount } from './types.ts'
+import type { PieceCount } from '../types.ts'
 
 export default function defaultStartingPiecesByBoardSize(boardSize: number): PieceCount {
 	switch (boardSize) {

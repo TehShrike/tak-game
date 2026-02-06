@@ -1,8 +1,8 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
-import moveIsValid from '../move-is-valid.ts'
-import p from '../parse-position.ts'
-import type { BoardState, Player, Piece, PlaceMove, MoveMove } from '../types.ts'
+import moveIsValid from './move-is-valid.ts'
+import p from './util/parse-position.ts'
+import type { BoardState, Player, Piece, PlaceMove, MoveMove } from './types.ts'
 
 function fewRandomPieces(whoseTurn: Player): BoardState {
 	const boardState = p(`

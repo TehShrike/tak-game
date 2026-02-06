@@ -1,6 +1,6 @@
-import getSquare from './get-square.ts'
-import getOwner from './get-owner.ts'
-import type { BoardState, Axis, Player, Coordinates, Square } from './types.ts'
+import getSquare from '../board/get-square.ts'
+import getOwner from '../board/get-owner.ts'
+import type { BoardState, Axis, Player, Coordinates, Square } from '../types.ts'
 
 interface Step {
 	coordinates: Coordinates

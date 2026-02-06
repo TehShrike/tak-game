@@ -1,6 +1,6 @@
 import getPiecesPickedUpFromSquare from './pieces-picked-up-from-square.ts'
-import getSquare from './get-square.ts'
-import type { BoardState, MoveMove, MoveDetails, Piece } from './types.ts'
+import getSquare from '../board/get-square.ts'
+import type { BoardState, MoveMove, MoveDetails, Piece } from '../types.ts'
 
 // non-obvious caveat: you can't call these functions after picking
 // up the stack from the original spot

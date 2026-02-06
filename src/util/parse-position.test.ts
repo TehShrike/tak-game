@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
-import parsePosition from '../parse-position.ts'
+import parsePosition from './parse-position.ts'
 import type { Piece, Square } from '../types.ts'
 
 function sq(pieces: Piece[] = [], topIsStanding = false): Square {

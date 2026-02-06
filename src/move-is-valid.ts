@@ -1,10 +1,10 @@
-import validPiece from './valid-piece.ts'
-import getSquare from './get-square.ts'
-import getPiecesPickedUpFromSquare from './pieces-picked-up-from-square.ts'
-import * as assertTypes from './assert-types.ts'
-import { map as moveMap } from './iterate-over-move-squares.ts'
-import { topPieceOfSquare as topPieceIsCapstone, piece as isCapstone } from './is-capstone.ts'
-import squareIsOwnedBy from './square-is-owned-by.ts'
+import validPiece from './rules/valid-piece.ts'
+import getSquare from './board/get-square.ts'
+import getPiecesPickedUpFromSquare from './rules/pieces-picked-up-from-square.ts'
+import * as assertTypes from './rules/assert-types.ts'
+import { map as moveMap } from './rules/iterate-over-move-squares.ts'
+import { topPieceOfSquare as topPieceIsCapstone, piece as isCapstone } from './rules/is-capstone.ts'
+import squareIsOwnedBy from './board/square-is-owned-by.ts'
 import type { BoardState, Move, PlaceMove, MoveMove, Player } from './types.ts'
 
 type ValidityCheck = (boardState: BoardState, move: Move) => boolean

@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Tak!",
   "type": "module",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "exports": {
-    ".": "./index.ts"
+    ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "node --test test/*.ts && echo 'Testing readme examples...' && jsmd readme.md && echo 'All done!'",
+    "test": "node --test 'src/**/*.test.ts' && echo 'Testing readme examples...' && jsmd readme.md && echo 'All done!'",
     "test:types": "tsc --noEmit"
   },
   "repository": {

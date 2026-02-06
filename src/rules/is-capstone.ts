@@ -1,4 +1,4 @@
-import type { Piece, Square } from './types.ts'
+import type { Piece, Square } from '../types.ts'
 
 export function piece(p: Piece): boolean {
 	return p.toUpperCase() === p
