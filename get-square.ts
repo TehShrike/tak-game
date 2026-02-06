@@ -1,22 +1,36 @@
 import turnYCoordinateIntoArrayIndex from './y-index.ts'
-import immutabilityHelper from 'immutability-helper'
-import type { BoardState, Coordinates, Square } from './types.ts'
-import type { Spec } from 'immutability-helper'
-
-const update = immutabilityHelper as unknown as <T>(target: T, spec: Spec<T>) => T
+import type { BoardState, Coordinates, Square, Piece } from './types.ts'
 
 export default function getSquare(boardState: BoardState, { x, y }: Coordinates): Square {
 	const yIndex = turnYCoordinateIntoArrayIndex(boardState, y)
 	return boardState.y[yIndex]![x]!
 }
 
-export function modify(boardState: BoardState, { x, y }: Coordinates, change: Spec<Square>): BoardState {
+function updateSquare(boardState: BoardState, { x, y }: Coordinates, newSquare: Square): BoardState {
 	const yIndex = turnYCoordinateIntoArrayIndex(boardState, y)
-	return update(boardState, {
-		y: {
-			[yIndex]: {
-				[x]: change
-			}
-		}
-	})
+	const newRow = boardState.y[yIndex]!.map((sq, i) => i === x ? newSquare : sq)
+	const newY = boardState.y.map((row, i) => i === yIndex ? newRow : row)
+
+	return {
+		...boardState,
+		y: newY
+	}
+}
+
+export function addPieces(boardState: BoardState, coordinates: Coordinates, pieces: Piece[], topIsStanding: boolean): BoardState {
+	const oldSquare = getSquare(boardState, coordinates)
+	const newSquare: Square = {
+		pieces: [...oldSquare.pieces, ...pieces],
+		topIsStanding
+	}
+	return updateSquare(boardState, coordinates, newSquare)
+}
+
+export function removePieces(boardState: BoardState, coordinates: Coordinates, count: number): BoardState {
+	const oldSquare = getSquare(boardState, coordinates)
+	const newSquare: Square = {
+		pieces: oldSquare.pieces.slice(0, -count),
+		topIsStanding: false
+	}
+	return updateSquare(boardState, coordinates, newSquare)
 }
