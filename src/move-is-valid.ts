@@ -1,23 +1,18 @@
-import validPiece from './rules/valid-piece.ts'
-import getSquare from './board/get-square.ts'
-import getPiecesPickedUpFromSquare from './rules/pieces-picked-up-from-square.ts'
-import * as assertTypes from './rules/assert-types.ts'
-import { map as moveMap } from './rules/iterate-over-move-squares.ts'
-import { topPieceOfSquare as topPieceIsCapstone, piece as isCapstone } from './rules/is-capstone.ts'
-import squareIsOwnedBy from './board/square-is-owned-by.ts'
-import type { BoardState, Move, PlaceMove, MoveMove, Player } from './types.ts'
-
-type ValidityCheck = (boardState: BoardState, move: Move) => boolean
-
-const validityChecks: Record<string, ValidityCheck> = {
-	PLACE: (boardState, move) => canPlace(boardState, move as PlaceMove),
-	MOVE: (boardState, move) => canMove(boardState, move as MoveMove)
-}
+import validPiece from "./rules/valid-piece.ts"
+import getSquare from "./board/get-square.ts"
+import getPiecesPickedUpFromSquare from "./rules/pieces-picked-up-from-square.ts"
+import * as assertTypes from "./rules/assert-types.ts"
+import { map as moveMap } from "./rules/iterate-over-move-squares.ts"
+import { topPieceOfSquare as topPieceIsCapstone, piece as isCapstone } from "./rules/is-capstone.ts"
+import squareIsOwnedBy from "./board/square-is-owned-by.ts"
+import pieceToPlayer from "./rules/piece-to-player.ts"
+import type { BoardState, Move, PlaceMove, MoveMove } from "./types.ts"
 
 export default function moveIsValid(boardState: BoardState, move: Move): boolean {
-	const check = validityChecks[move.type]
-	if (check) {
-		return check(boardState, move)
+	if (move.type === "PLACE") {
+		return canPlace(boardState, move)
+	} else if (move.type === "MOVE") {
+		return canMove(boardState, move)
 	}
 
 	return false
@@ -28,16 +23,18 @@ function canPlace(boardState: BoardState, move: PlaceMove): boolean {
 
 	const firstTurn = isFirstTurn(boardState)
 
-	const correctPlayersTurn = move.piece.toLowerCase() === boardState.whoseTurn
+	const correctPlayersTurn = pieceToPlayer(move.piece) === boardState.whoseTurn
 
 	if (firstTurn) {
 		return !correctPlayersTurn
 	} else {
-		return correctPlayersTurn
-			&& hasPiecesLeft(boardState, move)
-			&& notAStandingCapstone(move)
-			&& validPiece(move.piece)
-			&& getSquare(boardState, move).pieces.length === 0
+		return (
+			correctPlayersTurn &&
+			hasPiecesLeft(boardState, move) &&
+			notAStandingCapstone(move) &&
+			validPiece(move.piece) &&
+			getSquare(boardState, move).pieces.length === 0
+		)
 	}
 }
 
@@ -50,15 +47,14 @@ function isFirstTurn(boardState: BoardState): boolean {
 }
 
 function hasPiecesLeft(boardState: BoardState, move: PlaceMove): boolean {
-	const pieceCountKey = isCapstone(move.piece) ? 'capstones' : 'pieces'
-	const piecesLeft = boardState.piecesInHand[move.piece.toLowerCase() as Player][pieceCountKey]
+	const pieceCountKey = isCapstone(move.piece) ? "capstones" : "pieces"
+	const piecesLeft = boardState.piecesInHand[pieceToPlayer(move.piece)][pieceCountKey]
 	return piecesLeft > 0
 }
 
 function notAStandingCapstone(move: PlaceMove): boolean {
 	return !(/[XO]/.test(move.piece) && move.standing)
 }
-
 
 function canMove(boardState: BoardState, move: MoveMove): boolean {
 	assertTypes.move(move)
@@ -69,22 +65,23 @@ function canMove(boardState: BoardState, move: MoveMove): boolean {
 
 	const startingSquare = getSquare(boardState, move)
 
-	return squareIsOwnedBy(startingSquare, boardState.whoseTurn)
-		&& correctDropAmounts(move)
-		&& dropsAddUpToPickedUp(boardState, move)
-		&& allDropsStayOnTheBoard(boardState, move)
-		&& doesNotHitABlockingPiece(boardState, move)
+	return (
+		squareIsOwnedBy(startingSquare, boardState.whoseTurn) &&
+		correctDropAmounts(move) &&
+		dropsAddUpToPickedUp(boardState, move) &&
+		allDropsStayOnTheBoard(boardState, move) &&
+		doesNotHitABlockingPiece(boardState, move)
+	)
 }
 
 function correctDropAmounts(move: MoveMove): boolean {
-	return move.drops.length > 1
-		&& move.drops.slice(1).every(dropped => dropped > 0)
+	return move.drops.length > 1 && move.drops.slice(1).every(dropped => dropped > 0)
 }
 
 function allDropsStayOnTheBoard(boardState: BoardState, move: MoveMove): boolean {
 	const startingCoordinate = move[move.axis]
 	const moveSpaces = move.drops.length - 1
-	const endingCoordinate = startingCoordinate + (move.direction === '+' ? moveSpaces : (-moveSpaces))
+	const endingCoordinate = startingCoordinate + (move.direction === "+" ? moveSpaces : -moveSpaces)
 	return endingCoordinate >= 0 && endingCoordinate < boardState.size
 }
 
@@ -105,16 +102,21 @@ function doesNotHitABlockingPiece(boardState: BoardState, move: MoveMove): boole
 		if (first) {
 			return {
 				capstone: false,
-				standing: false
+				standing: false,
 			}
 		} else {
 			const square = getSquare(boardState, coordinates)
-			const droppingOnlyACapstone = piecesBeingDropped.length === 1 && isCapstone(piecesBeingDropped[0]!)
+			const droppingOnlyACapstone =
+				piecesBeingDropped.length === 1 && isCapstone(piecesBeingDropped[0]!)
 			return {
 				capstone: topPieceIsCapstone(square),
 				topIsStanding: square.topIsStanding,
-				droppingOnlyACapstone
+				droppingOnlyACapstone,
 			}
 		}
-	}).every(pieceDeetz => (!pieceDeetz.capstone && !pieceDeetz.topIsStanding) || (pieceDeetz.topIsStanding && pieceDeetz.droppingOnlyACapstone))
+	}).every(
+		pieceDeetz =>
+			(!pieceDeetz.capstone && !pieceDeetz.topIsStanding) ||
+			(pieceDeetz.topIsStanding && pieceDeetz.droppingOnlyACapstone),
+	)
 }

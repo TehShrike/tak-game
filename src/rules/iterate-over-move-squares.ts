@@ -1,6 +1,6 @@
 import getPiecesPickedUpFromSquare from './pieces-picked-up-from-square.ts'
 import getSquare from '../board/get-square.ts'
-import type { BoardState, MoveMove, MoveDetails, Piece } from '../types.ts'
+import type { BoardState, MoveMove, MoveDetails } from '../types.ts'
 
 // non-obvious caveat: you can't call these functions after picking
 // up the stack from the original spot
@@ -10,7 +10,7 @@ function moveDetails(startingBoardState: BoardState, move: MoveMove): (numberOfP
 	const toPickUp = getPiecesPickedUpFromSquare(startingBoardState, move)
 
 	// mutability warning: only ok because the array contains primitives
-	const stackToMove = startingSquare.pieces.slice(-toPickUp) as Piece[]
+	const stackToMove = startingSquare.pieces.slice(-toPickUp)
 
 	function adjust(current: number, offset: number): number {
 		return current + (move.direction === '+' ? offset : (-offset))

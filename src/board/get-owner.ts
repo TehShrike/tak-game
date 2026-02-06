@@ -1,3 +1,4 @@
+import pieceToPlayer from '../rules/piece-to-player.ts'
 import type { Player, Square } from '../types.ts'
 
 export default function getOwner(square: Square): Player | null {
@@ -5,5 +6,5 @@ export default function getOwner(square: Square): Player | null {
 		return null
 	}
 
-	return square.pieces[square.pieces.length - 1]!.toLowerCase() as Player
+	return pieceToPlayer(square.pieces[square.pieces.length - 1]!)
 }

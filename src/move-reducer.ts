@@ -2,7 +2,8 @@ import getSquare, { addPieces, removePieces } from './board/get-square.ts'
 import getPiecesPickedUpFromSquare from './rules/pieces-picked-up-from-square.ts'
 import { reduce as reduceMove } from './rules/iterate-over-move-squares.ts'
 import { piece as isCapstone } from './rules/is-capstone.ts'
-import type { BoardState, Move, PlaceMove, MoveMove, Player, Coordinates } from './types.ts'
+import pieceToPlayer from './rules/piece-to-player.ts'
+import type { BoardState, Move, PlaceMove, MoveMove, Coordinates } from './types.ts'
 
 export default function moveReducer(boardState: BoardState, move: Move): BoardState {
 	if (move.type === 'PLACE') {
@@ -16,7 +17,7 @@ export default function moveReducer(boardState: BoardState, move: Move): BoardSt
 
 function applyPlace(boardState: BoardState, move: PlaceMove): BoardState {
 	const pieceKey = isCapstone(move.piece) ? 'capstones' : 'pieces'
-	const player = move.piece.toLowerCase() as Player
+	const player = pieceToPlayer(move.piece)
 
 	const afterUpdatingSquare = addPieces(boardState, move, [move.piece], !!move.standing)
 
