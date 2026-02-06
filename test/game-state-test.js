@@ -1,8 +1,9 @@
-const test = require('tape')
+const { test } = require('node:test')
+const assert = require('node:assert')
 const p = require('../parse-position')
 const getGameState = require('../game-state')
 
-test('game over when someone runs out of pieces', t => {
+test('game over when someone runs out of pieces', () => {
 	const boardState = p(`
 		xxx|ooo|xxx
 		   |x  |
@@ -16,15 +17,13 @@ test('game over when someone runs out of pieces', t => {
 		O: 0
 	}))
 
-	t.equal(gameState.gameOver, true, 'game is over')
-	t.equal(gameState.winner, 'x', 'x wins')
-	t.equal(gameState.ownedSquares.x, 3)
-	t.equal(gameState.ownedSquares.o, 2)
-
-	t.end()
+	assert.strictEqual(gameState.gameOver, true, 'game is over')
+	assert.strictEqual(gameState.winner, 'x', 'x wins')
+	assert.strictEqual(gameState.ownedSquares.x, 3)
+	assert.strictEqual(gameState.ownedSquares.o, 2)
 })
 
-test(`The game's not over unless someone has used up all their pieces`, t => {
+test(`The game's not over unless someone has used up all their pieces`, () => {
 	const boardState = p(`
 		x|oo|xx
 		 |x |
@@ -34,7 +33,7 @@ test(`The game's not over unless someone has used up all their pieces`, t => {
 	function assertNotOver(pieces) {
 		const gameState = getGameState(p.pieces(boardState, pieces))
 
-		t.equal(gameState.gameOver, false)
+		assert.strictEqual(gameState.gameOver, false)
 	}
 
 	assertNotOver({
@@ -61,11 +60,9 @@ test(`The game's not over unless someone has used up all their pieces`, t => {
 		o: 1,
 		O: 0
 	})
-
-	t.end()
 })
 
-test('the game is over once all squares are filled: tie', t => {
+test('the game is over once all squares are filled: tie', () => {
 	const boardState = p.pieces(p(`
 		xo |oox |xo^ |x
 		o  |x   |oxo |o
@@ -80,15 +77,13 @@ test('the game is over once all squares are filled: tie', t => {
 
 	const gameState = getGameState(boardState)
 
-	t.equal(gameState.gameOver, true, 'game is over')
-	t.equal(gameState.winner, null, 'nobody wins')
-	t.equal(gameState.ownedSquares.x, 6)
-	t.equal(gameState.ownedSquares.o, 6)
-
-	t.end()
+	assert.strictEqual(gameState.gameOver, true, 'game is over')
+	assert.strictEqual(gameState.winner, null, 'nobody wins')
+	assert.strictEqual(gameState.ownedSquares.x, 6)
+	assert.strictEqual(gameState.ownedSquares.o, 6)
 })
 
-test('the game is over once all squares are filled: x wins', t => {
+test('the game is over once all squares are filled: x wins', () => {
 	const boardState = p.pieces(p(`
 		xo |oox |xo^ |x
 		o  |x   |oxo |o
@@ -103,19 +98,17 @@ test('the game is over once all squares are filled: x wins', t => {
 
 	const gameState = getGameState(boardState)
 
-	t.equal(gameState.gameOver, true, 'game is over')
-	t.equal(gameState.winner, 'x', 'x wins')
-	t.equal(gameState.ownedSquares.x, 7)
-	t.equal(gameState.ownedSquares.o, 6)
-
-	t.end()
+	assert.strictEqual(gameState.gameOver, true, 'game is over')
+	assert.strictEqual(gameState.winner, 'x', 'x wins')
+	assert.strictEqual(gameState.ownedSquares.x, 7)
+	assert.strictEqual(gameState.ownedSquares.o, 6)
 })
 
 function xy(x, y) {
 	return { x, y }
 }
 
-test('Win by vertical road', t => {
+test('Win by vertical road', () => {
 	const { winner, gameOver, winningRoute } = getGameState(p(`
 		 |  |xo|x
 		x|xx|xO|
@@ -123,17 +116,15 @@ test('Win by vertical road', t => {
 		o|x |  |x
 	`))
 
-	t.equal(gameOver, true, 'game is over')
-	t.equal(winner, 'o')
-	t.deepEqual(winningRoute, {
+	assert.strictEqual(gameOver, true, 'game is over')
+	assert.strictEqual(winner, 'o')
+	assert.deepStrictEqual(winningRoute, {
 		x: null,
 		o: [xy(0,0), xy(0,1), xy(1,1), xy(2,1), xy(2,2), xy(2,3)]
 	})
-
-	t.end()
 })
 
-test('Win by horizontal road', t => {
+test('Win by horizontal road', () => {
 	const { winner, gameOver, winningRoute } = getGameState(p(`
 		 |  |xo|o
 		x|xX|ox|
@@ -141,17 +132,15 @@ test('Win by horizontal road', t => {
 		o|x |x |x
 	`))
 
-	t.equal(gameOver, true, 'game is over')
-	t.equal(winner, 'x')
-	t.deepEqual(winningRoute, {
+	assert.strictEqual(gameOver, true, 'game is over')
+	assert.strictEqual(winner, 'x')
+	assert.deepStrictEqual(winningRoute, {
 		x: [xy(0,2), xy(1,2), xy(2,2), xy(2,1), xy(2,0), xy(3,0)],
 		o: null
 	})
-
-	t.end()
 })
 
-test('Tied winning routes', t => {
+test('Tied winning routes', () => {
 	const { winner, gameOver, winningRoute } = getGameState(p(`
 		o|o |xx|o
 		x|xo|xo|o
@@ -159,17 +148,15 @@ test('Tied winning routes', t => {
 		O|x |x |x
 	`))
 
-	t.equal(gameOver, true, 'game is over')
-	t.equal(winner, null)
-	t.deepEqual(winningRoute, {
+	assert.strictEqual(gameOver, true, 'game is over')
+	assert.strictEqual(winner, null)
+	assert.deepStrictEqual(winningRoute, {
 		x: [xy(0,1), xy(1,1), xy(1,0), xy(2,0), xy(3,0)],
 		o: [xy(0,3), xy(1,3), xy(1,2), xy(2,2), xy(3,2)]
 	})
-
-	t.end()
 })
 
-test('backtracking route on a 7x7 board', t => {
+test('backtracking route on a 7x7 board', () => {
 	const { winner, gameOver, winningRoute } = getGameState(p(`
 		o|o^|xx|X|  |o|
 		x|xo|xo|o|o^|o|
@@ -180,12 +167,10 @@ test('backtracking route on a 7x7 board', t => {
 		 |  |o | |  | |
 	`))
 
-	t.equal(gameOver, true, 'game is over')
-	t.equal(winner, 'o')
-	t.deepEqual(winningRoute, {
+	assert.strictEqual(gameOver, true, 'game is over')
+	assert.strictEqual(winner, 'o')
+	assert.deepStrictEqual(winningRoute, {
 		x: null,
 		o: [xy(2,0), xy(2,1), xy(2,2), xy(1,2), xy(1,3), xy(1,4), xy(1,5), xy(2,5), xy(3,5), xy(3,4), xy(3,3), xy(4,3), xy(5,3), xy(5,4), xy(5,5), xy(5,6)]
 	})
-
-	t.end()
 })

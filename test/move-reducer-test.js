@@ -1,4 +1,5 @@
-const test = require('tape')
+const { test } = require('node:test')
+const assert = require('node:assert')
 const p = require('../parse-position')
 const apply = require('../move-reducer')
 const moveIsValid = require('../move-is-valid')
@@ -11,7 +12,7 @@ function fewRandomPieces(whoseTurn = 'x') {
 	`, whoseTurn)
 }
 
-test('place a new piece', t => {
+test('place a new piece', () => {
 	const move = {
 		type: 'PLACE',
 		x: 1,
@@ -19,7 +20,7 @@ test('place a new piece', t => {
 		piece: 'x',
 		standing: false
 	}
-	t.ok(moveIsValid(fewRandomPieces('x'), move))
+	assert.ok(moveIsValid(fewRandomPieces('x'), move))
 	const actual = apply(fewRandomPieces('x'), move)
 
 	const expected = p(`
@@ -28,11 +29,10 @@ test('place a new piece', t => {
 		 |o^|
 	`, 'o')
 
-	t.deepEqual(actual, expected)
-	t.end()
+	assert.deepStrictEqual(actual, expected)
 })
 
-test('place a new standing piece', t => {
+test('place a new standing piece', () => {
 	const move = {
 		type: 'PLACE',
 		x: 1,
@@ -40,7 +40,7 @@ test('place a new standing piece', t => {
 		piece: 'o',
 		standing: true
 	}
-	t.ok(moveIsValid(fewRandomPieces('o'), move))
+	assert.ok(moveIsValid(fewRandomPieces('o'), move))
 	const actual = apply(fewRandomPieces('o'), move)
 
 	const expected = p(`
@@ -49,11 +49,10 @@ test('place a new standing piece', t => {
 		 |o^|
 	`, 'x')
 
-	t.deepEqual(actual, expected)
-	t.end()
+	assert.deepStrictEqual(actual, expected)
 })
 
-test('place a new capstone', t => {
+test('place a new capstone', () => {
 	const move = {
 		type: 'PLACE',
 		x: 1,
@@ -64,7 +63,7 @@ test('place a new capstone', t => {
 	const boardState = fewRandomPieces('x')
 	boardState.piecesInHand.x.capstones = 1
 
-	t.ok(moveIsValid(boardState, move))
+	assert.ok(moveIsValid(boardState, move))
 	const actual = apply(boardState, move)
 
 	const expected = p(`
@@ -75,11 +74,10 @@ test('place a new capstone', t => {
 
 	expected.piecesInHand.x.capstones = 0
 
-	t.deepEqual(actual, expected)
-	t.end()
+	assert.deepStrictEqual(actual, expected)
 })
 
-test('move a stack', t => {
+test('move a stack', () => {
 	function startingStacks(whoseTurn) {
 		return p(`
 			xxooxx|oo|X  |
@@ -90,8 +88,8 @@ test('move a stack', t => {
 	}
 
 	function testMove(message, move, whoseTurn, expected) {
-		t.ok(moveIsValid(startingStacks(whoseTurn), move), `VALID: ${message}`)
-		t.deepEqual(apply(startingStacks(whoseTurn), move), expected, message)
+		assert.ok(moveIsValid(startingStacks(whoseTurn), move), `VALID: ${message}`)
+		assert.deepStrictEqual(apply(startingStacks(whoseTurn), move), expected, message)
 	}
 
 	testMove('moving a stack across the whole row, dropping one piece on every square (x-)', {
@@ -149,6 +147,4 @@ test('move a stack', t => {
 		xxoo  |oO|x^ |xxo^
 		ox    |x |oo |oooo
 	`, 'x'))
-
-	t.end()
 })

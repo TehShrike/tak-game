@@ -1,5 +1,6 @@
+const { test } = require('node:test')
+const assert = require('node:assert')
 const parsePosition = require('../parse-position')
-const test = require('tape')
 
 function p(pieces = [], topIsStanding = false) {
 	return { pieces, topIsStanding }
@@ -10,7 +11,7 @@ const o = 'o'
 const X = 'X'
 const O = 'O'
 
-test('import 3x3 board', t => {
+test('import 3x3 board', () => {
 	const actual = parsePosition(`
 		xxo^|x   |
 		    |ooxO|x
@@ -37,11 +38,10 @@ test('import 3x3 board', t => {
 		whoseTurn: 'o'
 	}
 
-	t.deepEqual(actual, expected)
-	t.end()
+	assert.deepStrictEqual(actual, expected)
 })
 
-test('import 4x4 board', t => {
+test('import 4x4 board', () => {
 	const actual = parsePosition(`
 		    |xX  |
 		    |oox^|xoX
@@ -68,16 +68,14 @@ test('import 4x4 board', t => {
 		whoseTurn: 'x'
 	}
 
-	t.deepEqual(actual, expected)
-	t.end()
+	assert.deepStrictEqual(actual, expected)
 })
 
-test('throws on inconsistent rows', t => {
-	t.throws(function() {
+test('throws on inconsistent rows', () => {
+	assert.throws(function() {
 		parsePosition(`
 			x|o|x
 			o|x|o
 		`)
 	}, /Wrong number/)
-	t.end()
 })
