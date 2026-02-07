@@ -1,4 +1,4 @@
-import getSquare from '../board/get-square.ts'
+import getSquare from '../board/get_square.ts'
 import type { BoardState, Coordinates } from '../types.ts'
 
 export default function numberOfPiecesPickedUp(boardState: BoardState, coordinates: Coordinates): number {

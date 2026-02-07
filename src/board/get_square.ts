@@ -1,4 +1,4 @@
-import turnYCoordinateIntoArrayIndex from './y-index.ts'
+import turnYCoordinateIntoArrayIndex from './y_index.ts'
 import type { BoardState, Coordinates, Square, Piece } from '../types.ts'
 
 export default function getSquare(boardState: BoardState, { x, y }: Coordinates): Square {

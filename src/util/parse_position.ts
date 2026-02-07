@@ -1,5 +1,5 @@
-import validPiece from '../rules/valid-piece.ts'
-import startingPiecesByBoardSize from '../rules/starting-piece-counts.ts'
+import validPiece from '../rules/valid_piece.ts'
+import startingPiecesByBoardSize from '../rules/starting_piece_counts.ts'
 import type { BoardState, Player, Piece, Square } from '../types.ts'
 
 type PieceCounts = {

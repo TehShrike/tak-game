@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
-import createBoardState from './create-board-state.ts'
+import createBoardState from './create_board_state.ts'
 
 test('Create an empty board of size 4', () => {
 	const expected = {

@@ -1,8 +1,8 @@
-import getSquare, { addPieces, removePieces } from './board/get-square.ts'
-import getPiecesPickedUpFromSquare from './rules/pieces-picked-up-from-square.ts'
-import { reduce as reduceMove } from './rules/iterate-over-move-squares.ts'
-import { piece as isCapstone } from './rules/is-capstone.ts'
-import pieceToPlayer from './rules/piece-to-player.ts'
+import getSquare, { addPieces, removePieces } from './board/get_square.ts'
+import getPiecesPickedUpFromSquare from './rules/pieces_picked_up_from_square.ts'
+import { reduce as reduceMove } from './rules/iterate_over_move_squares.ts'
+import { piece as isCapstone } from './rules/is_capstone.ts'
+import pieceToPlayer from './rules/piece_to_player.ts'
 import type { BoardState, Move, PlaceMove, MoveMove, Coordinates } from './types.ts'
 
 export default function moveReducer(boardState: BoardState, move: Move): BoardState {

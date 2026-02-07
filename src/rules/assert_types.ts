@@ -1,4 +1,4 @@
-import isValidPiece from './valid-piece.ts'
+import isValidPiece from './valid_piece.ts'
 import type { MoveMove, PlaceMove } from '../types.ts'
 
 export function move(m: unknown): asserts m is MoveMove {

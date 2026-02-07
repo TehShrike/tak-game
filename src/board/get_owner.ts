@@ -1,4 +1,4 @@
-import pieceToPlayer from '../rules/piece-to-player.ts'
+import pieceToPlayer from '../rules/piece_to_player.ts'
 import type { Player, Square } from '../types.ts'
 
 export default function getOwner(square: Square): Player | null {

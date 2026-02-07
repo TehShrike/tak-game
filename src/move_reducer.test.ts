@@ -1,8 +1,8 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
-import p from './util/parse-position.ts'
-import apply from './move-reducer.ts'
-import moveIsValid from './move-is-valid.ts'
+import p from './util/parse_position.ts'
+import apply from './move_reducer.ts'
+import moveIsValid from './move_is_valid.ts'
 import type { BoardState, Player, PlaceMove, MoveMove } from './types.ts'
 
 function fewRandomPieces(whoseTurn: Player = 'x'): BoardState {

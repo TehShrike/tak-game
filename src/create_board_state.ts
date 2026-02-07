@@ -1,4 +1,4 @@
-import startingPiecesByBoardSize from './rules/starting-piece-counts.ts'
+import startingPiecesByBoardSize from './rules/starting_piece_counts.ts'
 import type { BoardState, Square } from './types.ts'
 
 const emptySquare: Readonly<Square> = Object.freeze({ topIsStanding: false, pieces: [] })

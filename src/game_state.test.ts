@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
-import p from './util/parse-position.ts'
-import getGameState from './game-state.ts'
+import p from './util/parse_position.ts'
+import getGameState from './game_state.ts'
 
 test('game over when someone runs out of pieces', () => {
 	const boardState = p(`

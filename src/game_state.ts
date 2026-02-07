@@ -1,6 +1,6 @@
-import { topPieceOfSquare as topPieceOfSquareIsCapstone } from './rules/is-capstone.ts'
-import findWinningRoute from './rules/find-winning-route.ts'
-import getOwner from './board/get-owner.ts'
+import { topPieceOfSquare as topPieceOfSquareIsCapstone } from './rules/is_capstone.ts'
+import findWinningRoute from './rules/find_winning_route.ts'
+import getOwner from './board/get_owner.ts'
 import type { BoardState, GameState, Player, Coordinates } from './types.ts'
 
 export default function gameState(boardState: BoardState): GameState {
