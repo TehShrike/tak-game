@@ -1,41 +1,41 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
-import createBoardState from './create_board_state.ts'
+import create_board_state from './create_board_state.ts'
 
 test('Create an empty board of size 4', () => {
 	const expected = {
 		size: 4,
-		whoseTurn: 'x' as const,
+		whose_turn: 'x' as const,
 		y: [
 			[
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			], [
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			], [
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			], [
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			]
 		],
-		piecesInHand: {
+		pieces_in_hand: {
 			x: { pieces: 15, capstones: 0 },
 			o: { pieces: 15, capstones: 0 }
 		}
 	}
 
-	const output = createBoardState(4)
+	const output = create_board_state(4)
 
 	assert.deepStrictEqual(expected, output)
 })
@@ -43,66 +43,66 @@ test('Create an empty board of size 4', () => {
 test('Create an empty board of size 5', () => {
 	const expected = {
 		size: 5,
-		whoseTurn: 'x' as const,
+		whose_turn: 'x' as const,
 		y: [
 			[
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			], [
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			], [
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			], [
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			], [
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] },
-				{ topIsStanding: false, pieces: [] }
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] },
+				{ top_is_standing: false, pieces: [] }
 			]
 		],
-		piecesInHand: {
+		pieces_in_hand: {
 			x: { pieces: 21, capstones: 1 },
 			o: { pieces: 21, capstones: 1 }
 		}
 	}
 
-	const output = createBoardState(5)
+	const output = create_board_state(5)
 
 	assert.deepStrictEqual(output, expected)
 })
 
 test('Correct piece counts at different board sizes', () => {
-	function testCreation(boardSize: number, expectedPieces: number, expectedCapstones: number) {
-		const boardState = createBoardState(boardSize)
+	function test_creation(board_size: number, expected_pieces: number, expected_capstones: number) {
+		const board_state = create_board_state(board_size)
 
-		assert.strictEqual(boardState.piecesInHand.x.pieces, expectedPieces, `Correct number of pieces for X at board size ${boardSize}`)
-		assert.strictEqual(boardState.piecesInHand.o.pieces, expectedPieces, `Correct number of pieces for O at board size ${boardSize}`)
+		assert.strictEqual(board_state.pieces_in_hand.x.pieces, expected_pieces, `Correct number of pieces for X at board size ${board_size}`)
+		assert.strictEqual(board_state.pieces_in_hand.o.pieces, expected_pieces, `Correct number of pieces for O at board size ${board_size}`)
 
-		assert.strictEqual(boardState.piecesInHand.x.capstones, expectedCapstones, `Correct number of capstones for X at board size ${boardSize}`)
-		assert.strictEqual(boardState.piecesInHand.o.capstones, expectedCapstones, `Correct number of capstones for O at board size ${boardSize}`)
+		assert.strictEqual(board_state.pieces_in_hand.x.capstones, expected_capstones, `Correct number of capstones for X at board size ${board_size}`)
+		assert.strictEqual(board_state.pieces_in_hand.o.capstones, expected_capstones, `Correct number of capstones for O at board size ${board_size}`)
 	}
 
-	testCreation(3, 10, 0)
-	testCreation(4, 15, 0)
-	testCreation(5, 21, 1)
-	testCreation(6, 30, 1)
-	testCreation(7, 40, 1)
-	testCreation(8, 50, 2)
+	test_creation(3, 10, 0)
+	test_creation(4, 15, 0)
+	test_creation(5, 21, 1)
+	test_creation(6, 30, 1)
+	test_creation(7, 40, 1)
+	test_creation(8, 50, 2)
 })

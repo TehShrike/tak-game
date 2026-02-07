@@ -2,15 +2,15 @@ import { test } from 'node:test'
 import assert from 'node:assert'
 import p from './util/parse_position.ts'
 import apply from './move_reducer.ts'
-import moveIsValid from './move_is_valid.ts'
+import move_is_valid from './move_is_valid.ts'
 import type { BoardState, Player, PlaceMove, MoveMove } from './types.ts'
 
-function fewRandomPieces(whoseTurn: Player = 'x'): BoardState {
+function few_random_pieces(whose_turn: Player = 'x'): BoardState {
 	return p(`
 		x|  |
 		 |  |O
 		 |o^|
-	`, whoseTurn)
+	`, whose_turn)
 }
 
 test('place a new piece', () => {
@@ -21,8 +21,8 @@ test('place a new piece', () => {
 		piece: 'x',
 		standing: false
 	}
-	assert.ok(moveIsValid(fewRandomPieces('x'), move))
-	const actual = apply(fewRandomPieces('x'), move)
+	assert.ok(move_is_valid(few_random_pieces('x'), move))
+	const actual = apply(few_random_pieces('x'), move)
 
 	const expected = p(`
 		x|x |
@@ -41,8 +41,8 @@ test('place a new standing piece', () => {
 		piece: 'o',
 		standing: true
 	}
-	assert.ok(moveIsValid(fewRandomPieces('o'), move))
-	const actual = apply(fewRandomPieces('o'), move)
+	assert.ok(move_is_valid(few_random_pieces('o'), move))
+	const actual = apply(few_random_pieces('o'), move)
 
 	const expected = p(`
 		x|o^|
@@ -61,11 +61,11 @@ test('place a new capstone', () => {
 		piece: 'X',
 		standing: false
 	}
-	const boardState = fewRandomPieces('x')
-	boardState.piecesInHand.x.capstones = 1
+	const board_state = few_random_pieces('x')
+	board_state.pieces_in_hand.x.capstones = 1
 
-	assert.ok(moveIsValid(boardState, move))
-	const actual = apply(boardState, move)
+	assert.ok(move_is_valid(board_state, move))
+	const actual = apply(board_state, move)
 
 	const expected = p(`
 		x|X |
@@ -73,27 +73,27 @@ test('place a new capstone', () => {
 		 |o^|
 	`, 'o')
 
-	expected.piecesInHand.x.capstones = 0
+	expected.pieces_in_hand.x.capstones = 0
 
 	assert.deepStrictEqual(actual, expected)
 })
 
 test('move a stack', () => {
-	function startingStacks(whoseTurn: Player): BoardState {
+	function starting_stacks(whose_turn: Player): BoardState {
 		return p(`
 			xxooxx|oo|X  |
 			oox   |O |ooo|o
 			xxoo  |o^|x^ |xxo^
 			ox    |x |oo |oooo
-		`, whoseTurn)
+		`, whose_turn)
 	}
 
-	function testMove(message: string, move: MoveMove, whoseTurn: Player, expected: BoardState) {
-		assert.ok(moveIsValid(startingStacks(whoseTurn), move), `VALID: ${message}`)
-		assert.deepStrictEqual(apply(startingStacks(whoseTurn), move), expected, message)
+	function test_move(message: string, move: MoveMove, whose_turn: Player, expected: BoardState) {
+		assert.ok(move_is_valid(starting_stacks(whose_turn), move), `VALID: ${message}`)
+		assert.deepStrictEqual(apply(starting_stacks(whose_turn), move), expected, message)
 	}
 
-	testMove('moving a stack across the whole row, dropping one piece on every square (x-)', {
+	test_move('moving a stack across the whole row, dropping one piece on every square (x-)', {
 		type: 'MOVE',
 		y: 0,
 		x: 3,
@@ -107,7 +107,7 @@ test('move a stack', () => {
 		oxo   |xo|ooo|o
 	`, 'x'))
 
-	testMove('moving the standing stone off the top of a stack (y+)', {
+	test_move('moving the standing stone off the top of a stack (y+)', {
 		type: 'MOVE',
 		y: 1,
 		x: 3,
@@ -121,7 +121,7 @@ test('move a stack', () => {
 		ox    |x |oo |oooo
 	`, 'x'))
 
-	testMove('moving the carry-limits worth of stones', {
+	test_move('moving the carry-limits worth of stones', {
 		type: 'MOVE',
 		y: 3,
 		x: 0,
@@ -135,7 +135,7 @@ test('move a stack', () => {
 		ox  |x     |oo |oooo
 	`, 'o'))
 
-	testMove('flattening a standing stone', {
+	test_move('flattening a standing stone', {
 		type: 'MOVE',
 		y: 2,
 		x: 1,

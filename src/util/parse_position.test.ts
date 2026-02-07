@@ -1,10 +1,10 @@
 import { test } from 'node:test'
 import assert from 'node:assert'
-import parsePosition from './parse_position.ts'
+import parse_position from './parse_position.ts'
 import type { Piece, Square } from '../types.ts'
 
-function sq(pieces: Piece[] = [], topIsStanding = false): Square {
-	return { pieces, topIsStanding }
+function sq(pieces: Piece[] = [], top_is_standing = false): Square {
+	return { pieces, top_is_standing }
 }
 
 const x: Piece = 'x'
@@ -13,7 +13,7 @@ const X: Piece = 'X'
 const O: Piece = 'O'
 
 test('import 3x3 board', () => {
-	const actual = parsePosition(`
+	const actual = parse_position(`
 		xxo^|x   |
 		    |ooxO|x
 		xo  |    |ox
@@ -26,7 +26,7 @@ test('import 3x3 board', () => {
 			[ sq(), sq([ o, o, x, O ]), sq([ x ]) ],
 			[ sq([ x, o ]), sq(), sq([ o, x ]) ]
 		],
-		piecesInHand: {
+		pieces_in_hand: {
 			x: {
 				pieces: 10 - 7,
 				capstones: 0
@@ -36,14 +36,14 @@ test('import 3x3 board', () => {
 				capstones: -1
 			}
 		},
-		whoseTurn: 'o' as const
+		whose_turn: 'o' as const
 	}
 
 	assert.deepStrictEqual(actual, expected)
 })
 
 test('import 4x4 board', () => {
-	const actual = parsePosition(`
+	const actual = parse_position(`
 		    |xX  |
 		    |oox^|xoX
 		xo  |    |ox
@@ -56,7 +56,7 @@ test('import 4x4 board', () => {
 			[ sq(), sq([ o, o, x ], true), sq([ x, o, X ]) ],
 			[ sq([ x, o ]), sq(), sq([ o, x ]) ]
 		],
-		piecesInHand: {
+		pieces_in_hand: {
 			x: {
 				pieces: 10 - 5,
 				capstones: -2
@@ -66,7 +66,7 @@ test('import 4x4 board', () => {
 				capstones: 0
 			}
 		},
-		whoseTurn: 'x' as const
+		whose_turn: 'x' as const
 	}
 
 	assert.deepStrictEqual(actual, expected)
@@ -74,7 +74,7 @@ test('import 4x4 board', () => {
 
 test('throws on inconsistent rows', () => {
 	assert.throws(function() {
-		parsePosition(`
+		parse_position(`
 			x|o|x
 			o|x|o
 		`)

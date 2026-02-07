@@ -1,7 +1,7 @@
 import type { Piece, Player } from '../types.ts'
 
-const pieceToPlayerMap: Record<Piece, Player> = { x: 'x', X: 'x', o: 'o', O: 'o' }
+const piece_to_player_map: Record<Piece, Player> = { x: 'x', X: 'x', o: 'o', O: 'o' }
 
-export default function pieceToPlayer(piece: Piece): Player {
-	return pieceToPlayerMap[piece]
+export default function piece_to_player(piece: Piece): Player {
+	return piece_to_player_map[piece]
 }

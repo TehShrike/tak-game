@@ -7,23 +7,23 @@ Based on the [beta rules](http://cheapass.com/sites/default/files/TakBetaRules3-
 ## API
 
 <!-- js
-const { moveIsValid, moveReducer, createBoardState, gameState } = require('.')
+const { move_is_valid, move_reducer, create_board_state, game_state } = require('.')
 -->
 
 ```
-const { moveIsValid, moveReducer, createBoardState, gameState } = require('tak-game')
+const { move_is_valid, move_reducer, create_board_state, game_state } = require('tak-game')
 ```
 
-- `moveIsValid(boardState, moveAction)` - returns `true`/`false`.  Will throw errors on bad types.
-- `moveReducer(boardState, moveAction)` - returns a new board state.  Acceptable action types are `'PLACE'` and `'MOVE'`.  Is a valid [Redux](http://redux.js.org/) reducer.
-- `createBoardState(boardSize)` - returns a fresh board state for a board with `boardSize` rows/columns
-- `gameState(boardState)` - returns details about the game derived from the board state:
-	- `gameOver` - true/false
+- `move_is_valid(board_state, move_action)` - returns `true`/`false`.  Will throw errors on bad types.
+- `move_reducer(board_state, move_action)` - returns a new board state.  Acceptable action types are `'PLACE'` and `'MOVE'`.  Is a valid [Redux](http://redux.js.org/) reducer.
+- `create_board_state(board_size)` - returns a fresh board state for a board with `board_size` rows/columns
+- `game_state(board_state)` - returns details about the game derived from the board state:
+	- `game_over` - true/false
 	- `winner` - `null`/`'x'`/`'o'`
-	- `ownedSquares` - `{ x: [number], o: [number] }`
-	- `winningRoute` - `{ x: [array of x/y coordinates], o: [array of x/y coordinates] }`
+	- `owned_squares` - `{ x: [number], o: [number] }`
+	- `winning_route` - `{ x: [array of x/y coordinates], o: [array of x/y coordinates] }`
 
-An example `moveAction` for placing a piece:
+An example `move_action` for placing a piece:
 ```js
 const placeAction = {
 	type: 'PLACE',
@@ -34,7 +34,7 @@ const placeAction = {
 }
 ```
 
-An example `moveAction` for moving a stack:
+An example `move_action` for moving a stack:
 ```js
 const moveAction = {
 	type: 'MOVE',
@@ -49,30 +49,30 @@ const moveAction = {
 ## Examples
 
 ```js
-const boardState = { size: 4,
-  whoseTurn: 'o',
+const board_state = { size: 4,
+  whose_turn: 'o',
   y:
-   [ [ { topIsStanding: false, pieces: [] },
-       { topIsStanding: false, pieces: [] },
-       { topIsStanding: false, pieces: [ 'x' ] },
-       { topIsStanding: false, pieces: [ 'x', 'o' ] } ],
-     [ { topIsStanding: false, pieces: [ 'x' ] },
-       { topIsStanding: true, pieces: [ 'x', 'x' ] },
-       { topIsStanding: false, pieces: [ 'x', 'o' ] },
-       { topIsStanding: false, pieces: [] } ],
-     [ { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'x' ] } ],
-     [ { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'x' ] },
-       { topIsStanding: false, pieces: [] },
-       { topIsStanding: false, pieces: [ 'x' ] } ] ],
-  piecesInHand:
+   [ [ { top_is_standing: false, pieces: [] },
+       { top_is_standing: false, pieces: [] },
+       { top_is_standing: false, pieces: [ 'x' ] },
+       { top_is_standing: false, pieces: [ 'x', 'o' ] } ],
+     [ { top_is_standing: false, pieces: [ 'x' ] },
+       { top_is_standing: true, pieces: [ 'x', 'x' ] },
+       { top_is_standing: false, pieces: [ 'x', 'o' ] },
+       { top_is_standing: false, pieces: [] } ],
+     [ { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'x' ] } ],
+     [ { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'x' ] },
+       { top_is_standing: false, pieces: [] },
+       { top_is_standing: false, pieces: [ 'x' ] } ] ],
+  pieces_in_hand:
    { x: { pieces: 6, capstones: 0 },
      o: { pieces: 9, capstones: 0 } } }
 
-gameState(boardState) // => { gameOver: false, winner: null, ownedSquares: { x: 5, o: 6 }, winningRoute: { x: null, o: null } }
+game_state(board_state) // => { game_over: false, winner: null, owned_squares: { x: 5, o: 6 }, winning_route: { x: null, o: null } }
 
 const move = {
 	type: 'MOVE',
@@ -83,12 +83,12 @@ const move = {
 	drops: [1, 1]
 }
 
-moveIsValid(boardState, move) // => true
+move_is_valid(board_state, move) // => true
 
-const expectedBoardState = { gameOver: true,
+const expected_board_state = { game_over: true,
   winner: 'o',
-  ownedSquares: { x: 5, o: 6 },
-  winningRoute:
+  owned_squares: { x: 5, o: 6 },
+  winning_route:
    { x: null,
      o:
       [ { x: 0, y: 0 },
@@ -98,7 +98,7 @@ const expectedBoardState = { gameOver: true,
         { x: 2, y: 2 },
         { x: 2, y: 3 } ] } }
 
-gameState(moveReducer(boardState, move)) // => expectedBoardState
+game_state(move_reducer(board_state, move)) // => expected_board_state
 
 
 const place = {
@@ -109,32 +109,32 @@ const place = {
 	standing: true
 }
 
-moveIsValid(boardState, place) // => true
+move_is_valid(board_state, place) // => true
 
-const expectedStateAfterPlace = { size: 4,
-  whoseTurn: 'x',
+const expected_state_after_place = { size: 4,
+  whose_turn: 'x',
   y:
-   [ [ { topIsStanding: true, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [] },
-       { topIsStanding: false, pieces: [ 'x' ] },
-       { topIsStanding: false, pieces: [ 'x', 'o' ] } ],
-     [ { topIsStanding: false, pieces: [ 'x' ] },
-       { topIsStanding: true, pieces: [ 'x', 'x' ] },
-       { topIsStanding: false, pieces: [ 'x', 'o' ] },
-       { topIsStanding: false, pieces: [] } ],
-     [ { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'x' ] } ],
-     [ { topIsStanding: false, pieces: [ 'o' ] },
-       { topIsStanding: false, pieces: [ 'x' ] },
-       { topIsStanding: false, pieces: [] },
-       { topIsStanding: false, pieces: [ 'x' ] } ] ],
-  piecesInHand:
+   [ [ { top_is_standing: true, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [] },
+       { top_is_standing: false, pieces: [ 'x' ] },
+       { top_is_standing: false, pieces: [ 'x', 'o' ] } ],
+     [ { top_is_standing: false, pieces: [ 'x' ] },
+       { top_is_standing: true, pieces: [ 'x', 'x' ] },
+       { top_is_standing: false, pieces: [ 'x', 'o' ] },
+       { top_is_standing: false, pieces: [] } ],
+     [ { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'x' ] } ],
+     [ { top_is_standing: false, pieces: [ 'o' ] },
+       { top_is_standing: false, pieces: [ 'x' ] },
+       { top_is_standing: false, pieces: [] },
+       { top_is_standing: false, pieces: [ 'x' ] } ] ],
+  pieces_in_hand:
    { x: { pieces: 6, capstones: 0 },
      o: { pieces: 8, capstones: 0 } } }
 
-moveReducer(boardState, place) // => expectedStateAfterPlace
+move_reducer(board_state, place) // => expected_state_after_place
 
 ```
 

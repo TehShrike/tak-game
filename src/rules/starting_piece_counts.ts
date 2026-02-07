@@ -1,7 +1,7 @@
 import type { PieceCount } from '../types.ts'
 
-export default function defaultStartingPiecesByBoardSize(boardSize: number): PieceCount {
-	switch (boardSize) {
+export default function default_starting_pieces_by_board_size(board_size: number): PieceCount {
+	switch (board_size) {
 	case 3:
 		return { pieces: 10, capstones: 0 }
 	case 4:

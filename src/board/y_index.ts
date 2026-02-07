@@ -1,5 +1,5 @@
 import type { BoardState } from '../types.ts'
 
-export default function turnYCoordinateIntoArrayIndex(boardState: BoardState, y: number): number {
-	return boardState.size - y - 1
+export default function turn_y_coordinate_into_array_index(board_state: BoardState, y: number): number {
+	return board_state.size - y - 1
 }

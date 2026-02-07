@@ -4,7 +4,7 @@ export type Axis = 'x' | 'y'
 export type Direction = '+' | '-'
 
 export type Square = {
-	topIsStanding: boolean
+	top_is_standing: boolean
 	pieces: Piece[]
 }
 
@@ -15,9 +15,9 @@ export type PieceCount = {
 
 export type BoardState = {
 	size: number
-	whoseTurn: Player
+	whose_turn: Player
 	y: Square[][]
-	piecesInHand: {
+	pieces_in_hand: {
 		x: PieceCount
 		o: PieceCount
 	}
@@ -48,13 +48,13 @@ export type MoveMove = {
 export type Move = PlaceMove | MoveMove
 
 export type GameState = {
-	gameOver: boolean
+	game_over: boolean
 	winner: Player | null
-	ownedSquares: {
+	owned_squares: {
 		x: number
 		o: number
 	}
-	winningRoute: {
+	winning_route: {
 		x: Coordinates[] | null
 		o: Coordinates[] | null
 	}
@@ -64,5 +64,5 @@ export type MoveDetails = {
 	coordinates: Coordinates
 	first: boolean
 	last: boolean
-	piecesBeingDropped: Piece[]
+	pieces_being_dropped: Piece[]
 }

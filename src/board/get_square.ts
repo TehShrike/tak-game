@@ -1,36 +1,36 @@
-import turnYCoordinateIntoArrayIndex from './y_index.ts'
+import turn_y_coordinate_into_array_index from './y_index.ts'
 import type { BoardState, Coordinates, Square, Piece } from '../types.ts'
 
-export default function getSquare(boardState: BoardState, { x, y }: Coordinates): Square {
-	const yIndex = turnYCoordinateIntoArrayIndex(boardState, y)
-	return boardState.y[yIndex]![x]!
+export default function get_square(board_state: BoardState, { x, y }: Coordinates): Square {
+	const y_index = turn_y_coordinate_into_array_index(board_state, y)
+	return board_state.y[y_index]![x]!
 }
 
-function updateSquare(boardState: BoardState, { x, y }: Coordinates, newSquare: Square): BoardState {
-	const yIndex = turnYCoordinateIntoArrayIndex(boardState, y)
-	const newRow = boardState.y[yIndex]!.map((sq, i) => i === x ? newSquare : sq)
-	const newY = boardState.y.map((row, i) => i === yIndex ? newRow : row)
+function update_square(board_state: BoardState, { x, y }: Coordinates, new_square: Square): BoardState {
+	const y_index = turn_y_coordinate_into_array_index(board_state, y)
+	const new_row = board_state.y[y_index]!.map((sq, i) => i === x ? new_square : sq)
+	const new_y = board_state.y.map((row, i) => i === y_index ? new_row : row)
 
 	return {
-		...boardState,
-		y: newY
+		...board_state,
+		y: new_y
 	}
 }
 
-export function addPieces(boardState: BoardState, coordinates: Coordinates, pieces: Piece[], topIsStanding: boolean): BoardState {
-	const oldSquare = getSquare(boardState, coordinates)
-	const newSquare: Square = {
-		pieces: [...oldSquare.pieces, ...pieces],
-		topIsStanding
+export function add_pieces(board_state: BoardState, coordinates: Coordinates, pieces: Piece[], top_is_standing: boolean): BoardState {
+	const old_square = get_square(board_state, coordinates)
+	const new_square: Square = {
+		pieces: [...old_square.pieces, ...pieces],
+		top_is_standing
 	}
-	return updateSquare(boardState, coordinates, newSquare)
+	return update_square(board_state, coordinates, new_square)
 }
 
-export function removePieces(boardState: BoardState, coordinates: Coordinates, count: number): BoardState {
-	const oldSquare = getSquare(boardState, coordinates)
-	const newSquare: Square = {
-		pieces: oldSquare.pieces.slice(0, -count),
-		topIsStanding: false
+export function remove_pieces(board_state: BoardState, coordinates: Coordinates, count: number): BoardState {
+	const old_square = get_square(board_state, coordinates)
+	const new_square: Square = {
+		pieces: old_square.pieces.slice(0, -count),
+		top_is_standing: false
 	}
-	return updateSquare(boardState, coordinates, newSquare)
+	return update_square(board_state, coordinates, new_square)
 }
