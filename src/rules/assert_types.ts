@@ -1,16 +1,15 @@
 import is_valid_piece from './valid_piece.ts'
-import type { MoveMove, PlaceMove } from '../types.ts'
+import type { MoveMove, PlaceMove, Direction, Piece } from '../types.ts'
 
 export function move(m: unknown): asserts m is MoveMove {
 	if (typeof m !== 'object' || m === null) {
 		throw new Error('Move must be an object')
 	}
 	const obj = m as Record<string, unknown>
-	assert_number(obj, 'x')
-	assert_number(obj, 'y')
-	assert_array_of_numbers(obj, 'drops')
-	assert_valid_axis(obj, 'axis')
-	assert_valid_direction(obj, 'direction')
+	assert_number(obj.x, 'x')
+	assert_number(obj.y, 'y')
+	assert_array_of_numbers(obj.drops, 'drops')
+	assert_valid_direction(obj.direction, 'direction')
 }
 
 export function place(m: unknown): asserts m is PlaceMove {
@@ -18,46 +17,38 @@ export function place(m: unknown): asserts m is PlaceMove {
 		throw new Error('Move must be an object')
 	}
 	const obj = m as Record<string, unknown>
-	assert_number(obj, 'x')
-	assert_number(obj, 'y')
-	assert_valid_piece(obj, 'piece')
-	assert_boolean(obj, 'standing')
+	assert_number(obj.x, 'x')
+	assert_number(obj.y, 'y')
+	assert_valid_piece(obj.piece, 'piece')
+	assert_boolean(obj.standing, 'standing')
 }
 
-function assert_number(object: Record<string, unknown>, key: string): void {
-	if (typeof object[key] !== 'number') {
-		throw new Error(`${key} (${object[key]}) must be a number`)
+function assert_number(value: unknown, name: string): asserts value is number {
+	if (typeof value !== 'number') {
+		throw new Error(`${name} (${value}) must be a number`)
 	}
 }
 
-function assert_array_of_numbers(object: Record<string, unknown>, key: string): void {
-	const value = object[key]
+function assert_array_of_numbers(value: unknown, name: string): asserts value is number[] {
 	if (!Array.isArray(value) || !value.every(v => typeof v === 'number')) {
-		throw new Error(`${key} (${value}) must be an array of numbers`)
+		throw new Error(`${name} (${value}) must be an array of numbers`)
 	}
 }
 
-function assert_valid_axis(object: Record<string, unknown>, key: string): void {
-	if (object[key] !== 'x' && object[key] !== 'y') {
-		throw new Error(`${key} (${object[key]}) is not a valid axis`)
+function assert_valid_direction(value: unknown, name: string): asserts value is Direction {
+	if (value !== '<' && value !== '>' && value !== '+' && value !== '-') {
+		throw new Error(`${name} (${value}) is not a valid direction`)
 	}
 }
 
-function assert_valid_direction(object: Record<string, unknown>, key: string): void {
-	if (object[key] !== '-' && object[key] !== '+') {
-		throw new Error(`${key} (${object[key]}) is not a valid direction`)
-	}
-}
-
-function assert_valid_piece(object: Record<string, unknown>, key: string): void {
-	const value = object[key]
+function assert_valid_piece(value: unknown, name: string): asserts value is Piece {
 	if (typeof value !== 'string' || !is_valid_piece(value)) {
-		throw new Error(`${key} (${value}) is not a valid piece`)
+		throw new Error(`${name} (${value}) is not a valid piece`)
 	}
 }
 
-function assert_boolean(object: Record<string, unknown>, key: string): void {
-	if (object[key] !== true && object[key] !== false) {
-		throw new Error(`${key} (${object[key]}) is not a valid boolean`)
+function assert_boolean(value: unknown, name: string): asserts value is boolean {
+	if (value !== true && value !== false) {
+		throw new Error(`${name} (${value}) is not a valid boolean`)
 	}
 }

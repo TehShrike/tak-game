@@ -5,7 +5,8 @@
       "Bash(npm test:*)",
       "Bash(npm install)",
       "Bash(npm run test:types:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:ustak.org)"
     ]
   }
 }

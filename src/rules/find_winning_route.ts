@@ -1,6 +1,8 @@
 import get_square from '../board/get_square.ts'
 import get_owner from '../board/get_owner.ts'
-import type { BoardState, Axis, Player, Coordinates, Square } from '../types.ts'
+import type { BoardState, Player, Coordinates, Square } from '../types.ts'
+
+type Axis = 'x' | 'y'
 
 type Step = {
 	coordinates: Coordinates

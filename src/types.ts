@@ -1,7 +1,6 @@
 export type Player = 'x' | 'o'
 export type Piece = 'x' | 'X' | 'o' | 'O'
-export type Axis = 'x' | 'y'
-export type Direction = '+' | '-'
+export type Direction = '<' | '>' | '+' | '-'
 
 export type Square = {
 	top_is_standing: boolean
@@ -40,7 +39,6 @@ export type MoveMove = {
 	type: 'MOVE'
 	x: number
 	y: number
-	axis: Axis
 	direction: Direction
 	drops: number[]
 }

@@ -36,15 +36,16 @@ const placeAction = {
 
 An example `move_action` for moving a stack:
 ```js
-const moveAction = {
+const move_action = {
 	type: 'MOVE',
 	y: 0,
 	x: 3,
-	axis: 'x',
-	direction: '-',
+	direction: '<',
 	drops: [1, 1, 1, 1]
 }
 ```
+
+Direction uses [PTN notation](https://ustak.org/portable-tak-notation/): `<` (left), `>` (right), `+` (up), `-` (down).
 
 ## Examples
 
@@ -78,8 +79,7 @@ const move = {
 	type: 'MOVE',
 	y: 3,
 	x: 3,
-	axis: 'x',
-	direction: '-',
+	direction: '<',
 	drops: [1, 1]
 }
 
@@ -146,7 +146,7 @@ y coordinates int he game state array are reversed from the y coordinates used o
 
 A "move" action picks up the whole stack, up to the carry limit.  The first drop count is how many stones to drop back down on that first square (can be 0).
 
-The move reducer functions do not validate moves before they apply them.  Make sure that any move has been validated by calling `moveIsValid` before applying it.
+The move reducer functions do not validate moves before they apply them.  Make sure that any move has been validated by calling `move_is_valid` before applying it.
 
 ## If you find any issues
 

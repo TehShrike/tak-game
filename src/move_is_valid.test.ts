@@ -147,7 +147,6 @@ test(`during the first turn, you can't move that one piece`, () => {
 		type: 'MOVE',
 		x: 0,
 		y: 2,
-		axis: 'y',
 		direction: '-',
 		drops: [0, 1]
 	}, 'board', single_piece_board, `Can't move during the first turn`)
@@ -243,7 +242,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 3,
 		x: 0,
-		axis: 'y',
 		direction: '-',
 		drops: [0, 1, 3]
 	}, 'drops', [1, 0, 2], 'Only the first in the drop list can be 0')
@@ -253,7 +251,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 3,
 		x: 0,
-		axis: 'y',
 		direction: '-',
 		drops: [2, 2]
 	}, 'drops', [1, 2, 2], `Can't move more stones than you can pick up`)
@@ -263,7 +260,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 3,
 		x: 0,
-		axis: 'y',
 		direction: '-',
 		drops: [2, 2]
 	}, 'drops', [0, 2], `Can't move less stones than you can pick up`)
@@ -273,7 +269,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 3,
 		x: 2,
-		axis: 'y',
 		direction: '-',
 		drops: [0, 1]
 	}, 'x', 3, `Can't move from an empty space`)
@@ -283,7 +278,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 1,
 		x: 3,
-		axis: 'y',
 		direction: '+',
 		drops: [0, 3]
 	}, 'drops', [0, 2], `Can't move less stones than you can pick up, even with a standing stone`)
@@ -293,7 +287,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 1,
 		x: 3,
-		axis: 'y',
 		direction: '+',
 		drops: [0, 3]
 	}, 'drops', [3], `Must move onto at least one other square`)
@@ -303,7 +296,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 1,
 		x: 3,
-		axis: 'y',
 		direction: '+',
 		drops: [0, 1, 2]
 	}, 'drops', [0, 1, 1, 1], `Can't move off the board up`)
@@ -313,7 +305,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 1,
 		x: 3,
-		axis: 'y',
 		direction: '-',
 		drops: [0, 3]
 	}, 'drops', [0, 1, 2], `Can't move off the board down`)
@@ -323,8 +314,7 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 0,
 		x: 2,
-		axis: 'x',
-		direction: '+',
+		direction: '>',
 		drops: [0, 2]
 	}, 'drops', [0, 1, 1], `Can't move off the board right`)
 
@@ -333,8 +323,7 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 0,
 		x: 2,
-		axis: 'x',
-		direction: '+',
+		direction: '>',
 		drops: [1, 1]
 	}, 'board', x_turn, `Can't move an o-owned stack when it's x's turn`)
 
@@ -343,7 +332,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 0,
 		x: 0,
-		axis: 'y',
 		direction: '+',
 		drops: [1, 1]
 	}, 'board', o_turn, `Can't move an x-owned stack when it's o's turn`)
@@ -353,7 +341,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 3,
 		x: 2,
-		axis: 'y',
 		direction: '-',
 		drops: [0, 1]
 	}, 'board', o_turn, `Can't move an x-capped stack when it's o's turn`)
@@ -363,7 +350,6 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 2,
 		x: 1,
-		axis: 'y',
 		direction: '+',
 		drops: [0, 2]
 	}, 'board', x_turn, `Can't move an o-capped stack when it's x's turn`)
@@ -373,27 +359,24 @@ test('Invalid movements', () => {
 		type: 'MOVE',
 		y: 0,
 		x: 2,
-		axis: 'x',
-		direction: '+',
+		direction: '>',
 		drops: [0, 2]
-	}, 'axis', 'y', `Can't move onto a standing stone`)
+	}, 'direction', '+', `Can't move onto a standing stone`)
 
 	assert_move_is_valid_except_for({
 		board: x_turn,
 		type: 'MOVE',
 		y: 2,
 		x: 0,
-		axis: 'y',
 		direction: '+',
 		drops: [1, 2]
-	}, 'axis', 'x', `Can't move onto a capstone`)
+	}, 'direction', '>', `Can't move onto a capstone`)
 
 	assert_move_is_valid_except_for({
 		board: o_turn,
 		type: 'MOVE',
 		y: 2,
 		x: 1,
-		axis: 'y',
 		direction: '-',
 		drops: [1, 1]
 	}, 'drops', [0, 2], `Can't flatten a standing stone with anything but a single capstone`)

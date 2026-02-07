@@ -93,12 +93,11 @@ test('move a stack', () => {
 		assert.deepStrictEqual(apply(starting_stacks(whose_turn), move), expected, message)
 	}
 
-	test_move('moving a stack across the whole row, dropping one piece on every square (x-)', {
+	test_move('moving a stack across the whole row, dropping one piece on every square (<)', {
 		type: 'MOVE',
 		y: 0,
 		x: 3,
-		axis: 'x',
-		direction: '-',
+		direction: '<',
 		drops: [1, 1, 1, 1]
 	}, 'o', p(`
 		xxooxx|oo|X  |
@@ -107,11 +106,10 @@ test('move a stack', () => {
 		oxo   |xo|ooo|o
 	`, 'x'))
 
-	test_move('moving the standing stone off the top of a stack (y+)', {
+	test_move('moving the standing stone off the top of a stack (+)', {
 		type: 'MOVE',
 		y: 1,
 		x: 3,
-		axis: 'y',
 		direction: '+',
 		drops: [2, 1]
 	}, 'o', p(`
@@ -125,8 +123,7 @@ test('move a stack', () => {
 		type: 'MOVE',
 		y: 3,
 		x: 0,
-		axis: 'x',
-		direction: '+',
+		direction: '>',
 		drops: [0, 4]
 	}, 'x', p(`
 		xx  |ooooxx|X  |
@@ -139,7 +136,6 @@ test('move a stack', () => {
 		type: 'MOVE',
 		y: 2,
 		x: 1,
-		axis: 'y',
 		direction: '-',
 		drops: [0, 1]
 	}, 'o', p(`

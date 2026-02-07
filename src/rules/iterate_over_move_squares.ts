@@ -12,8 +12,11 @@ function move_details(starting_board_state: BoardState, move: MoveMove): (number
 	// mutability warning: only ok because the array contains primitives
 	const stack_to_move = starting_square.pieces.slice(-to_pick_up)
 
+	const axis = move.direction === '<' || move.direction === '>' ? 'x' : 'y'
+	const positive = move.direction === '>' || move.direction === '+'
+
 	function adjust(current: number, offset: number): number {
-		return current + (move.direction === '+' ? offset : (-offset))
+		return current + (positive ? offset : (-offset))
 	}
 
 	function get_next_square_coordinates(offset: number): { x: number; y: number } {
@@ -21,7 +24,7 @@ function move_details(starting_board_state: BoardState, move: MoveMove): (number
 			x: move.x,
 			y: move.y
 		}
-		coordinates[move.axis] = adjust(coordinates[move.axis], offset)
+		coordinates[axis] = adjust(coordinates[axis], offset)
 		return coordinates
 	}
 

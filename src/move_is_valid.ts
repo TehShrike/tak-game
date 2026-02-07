@@ -79,9 +79,11 @@ function correct_drop_amounts(move: MoveMove): boolean {
 }
 
 function all_drops_stay_on_the_board(board_state: BoardState, move: MoveMove): boolean {
-	const starting_coordinate = move[move.axis]
+	const axis = move.direction === '<' || move.direction === '>' ? 'x' : 'y'
+	const positive = move.direction === '>' || move.direction === '+'
+	const starting_coordinate = move[axis]
 	const move_spaces = move.drops.length - 1
-	const ending_coordinate = starting_coordinate + (move.direction === "+" ? move_spaces : -move_spaces)
+	const ending_coordinate = starting_coordinate + (positive ? move_spaces : -move_spaces)
 	return ending_coordinate >= 0 && ending_coordinate < board_state.size
 }
 

@@ -6,7 +6,6 @@ export { default as create_board_state } from './create_board_state.ts'
 export type {
 	Player,
 	Piece,
-	Axis,
 	Direction,
 	Square,
 	PieceCount,
